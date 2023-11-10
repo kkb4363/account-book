@@ -1,4 +1,6 @@
 # account-book
-- pwa, 가게부 제작
-- 현재는 임시로 localstorage 사용
+  ## pwa, 가게부
+  -  CRA
 
+  ### design - updating...
+<img width="837" alt="스크린샷 2023-11-10 오후 2 58 24" src="https://github.com/kkb4363/account-book/assets/101088024/c329050a-cc70-4c98-9ef6-939d3c3d8884">
