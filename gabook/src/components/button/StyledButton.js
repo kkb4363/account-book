@@ -7,7 +7,7 @@ const ButtonWrapper = styled.button`
 
   color: ${({ $color }) => ($color ? $color : 'white')};
   font-weight: 600;
-  font-size: 14px;
+  font-size: ${({ $fontsize }) => ($fontsize ? $fontsize : '14px')};
 
   display: flex;
   justify-content: center;
@@ -26,6 +26,7 @@ const StyledButton = (props) => {
       $height={props.height}
       $bgColor={props.bgColor}
       $color={props.color}
+      $fontsize={props.fontsize}
     >
       {props.children}
     </ButtonWrapper>

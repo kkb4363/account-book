@@ -7,6 +7,7 @@ import { currentCategoryAtom } from '../../atoms/CategoryAtom';
 import { moneyAtom } from '../../atoms/MoneyAtom';
 import { useRef } from 'react';
 import { historyAtom } from '../../atoms/HistoryAtom';
+import { useNavigate } from 'react-router-dom';
 
 const MainInputsWrapper = styled.div`
   display: flex;
@@ -82,7 +83,7 @@ const MainInputs = (props) => {
   const [currentMoney, setCurrentMoney] = useRecoilState(moneyAtom);
   const newMoneyRef = useRef('');
   const selectedDateRef = useRef('');
-
+  const navigate = useNavigate();
   const setHistory = useSetRecoilState(historyAtom);
 
   const onAddHistory = async () => {
@@ -98,10 +99,12 @@ const MainInputs = (props) => {
         date: selectedDateRef.current.value,
         category: currentCategory,
         cost: currentMoney,
+        id: Math.random(),
       },
     ]);
 
     props.onClose();
+    navigate('/history');
   };
 
   return (
@@ -130,7 +133,7 @@ const MainInputs = (props) => {
           outline={'none'}
           fontsize="18px"
           type="number"
-          placeholder={currentMoney == '' ? '금액을 숫자만 입력해주세요' : currentMoney}
+          placeholder={currentMoney == '' ? '금액을 입력해주세요' : currentMoney}
           inputRef={newMoneyRef}
         />
         <span />

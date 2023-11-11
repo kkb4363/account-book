@@ -8,13 +8,13 @@ import MainInputs from '../components/main/MainInputs';
 import CategorySelect from '../components/category/CategorySelect';
 import { useSetRecoilState } from 'recoil';
 import { moneyAtom } from '../atoms/MoneyAtom';
+import { useNavigate } from 'react-router-dom';
 const MainTitle = 'GABook';
 const MainSubTitle = 'Gibeom Account Book';
 const MainTextPaddingSize = '1rem';
 
 const Wrapper = styled.div`
   display: flex;
-
   flex-direction: column;
 `;
 
@@ -62,11 +62,10 @@ const Details = styled.div`
 
   height:17.5vh;
   width:100%:
-
-
 `;
 
 const Main = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState({
     addMoney: false,
     category: false,
@@ -96,12 +95,12 @@ const Main = () => {
     {
       text: '최근 내역',
       name: 'current',
-      onclick: handleMoney,
+      onClick: () => navigate('/history'),
     },
     {
       text: '통계 확인',
       name: 'status',
-      onclick: handleMoney,
+      onClick: () => alert('개발 예정이에요 😅'),
     },
   ];
 
@@ -129,11 +128,16 @@ const Main = () => {
       <InputMoney>
         <StyledInput
           type="number"
-          placeholder={'금액을 숫자만 입력해주세요'}
+          placeholder={'금액을 입력해주세요'}
           inputRef={inputref}
           onSubmit={setMoney}
         />
-        <StyledButton onClick={setMoneyHandler} width={'4.8rem'} height={'2.5rem'}>
+        <StyledButton
+          onClick={setMoneyHandler}
+          width={'4.8rem'}
+          height={'2.5rem'}
+          fontsize="12px"
+        >
           내역 추가
         </StyledButton>
       </InputMoney>
@@ -142,10 +146,10 @@ const Main = () => {
         {detailsButtons.map((btn, idx) => (
           <StyledButton
             key={idx}
-            onCxlick={btn.onclick}
-            name={btn.name}
-            width={'4.8rem'}
-            height={'2.5rem'}
+            width={'7rem'}
+            height={'3.5rem'}
+            fontsize={'16px'}
+            onClick={btn.onClick}
           >
             {btn.text}
           </StyledButton>
