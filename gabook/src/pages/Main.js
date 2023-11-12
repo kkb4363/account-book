@@ -2,13 +2,15 @@ import { styled } from 'styled-components';
 import bgimage from '../images/bgimage.png';
 import StyledInput from '../components/input/StyledInput';
 import StyledButton from '../components/button/StyledButton';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import MotionInputs from '../components/motion/MotionInput';
 import MainInputs from '../components/main/MainInputs';
 import CategorySelect from '../components/category/CategorySelect';
 import { useSetRecoilState } from 'recoil';
 import { moneyAtom } from '../atoms/MoneyAtom';
 import { useNavigate } from 'react-router-dom';
+import CategoryUpdate from '../components/category/CategoryUpdate';
+import UseHandler from '../hooks/UseHandler';
 const MainTitle = 'GABook';
 const MainSubTitle = 'Gibeom Account Book';
 const MainTextPaddingSize = '1rem';
@@ -66,31 +68,19 @@ const Details = styled.div`
 
 const Main = () => {
   const navigate = useNavigate();
-  const [open, setOpen] = useState({
-    addMoney: false,
-    category: false,
-  });
+  const fields = ['addMoney', 'category', 'addCategory'];
+  const [open, closeAll, handleToggle] = UseHandler(fields);
 
-  const closeOpen = () => {
-    setOpen({
-      addMoney: false,
-      current: false,
-    });
+  const inputref = useRef('');
+  const setMoneyAtom = useSetRecoilState(moneyAtom);
+  const setMoney = (e) => {
+    e.preventDefault();
+    setMoneyAtom(inputref.current.value);
   };
-
-  const handleCategory = () => {
-    setOpen((prev) => ({
-      ...prev,
-      category: !prev['category'],
-    }));
+  const setMoneyHandler = () => {
+    setMoneyAtom(inputref.current.value);
+    handleToggle('addMoney');
   };
-  const handleMoney = () => {
-    setOpen((prev) => ({
-      ...prev,
-      addMoney: !prev['addMoney'],
-    }));
-  };
-
   const detailsButtons = [
     {
       text: '최근 내역',
@@ -103,18 +93,6 @@ const Main = () => {
       onClick: () => alert('개발 예정이에요 😅'),
     },
   ];
-
-  const inputref = useRef('');
-  const setMoneyAtom = useSetRecoilState(moneyAtom);
-  const setMoney = (e) => {
-    e.preventDefault();
-    setMoneyAtom(inputref.current.value);
-  };
-
-  const setMoneyHandler = () => {
-    setMoneyAtom(inputref.current.value);
-    handleMoney();
-  };
 
   return (
     <Wrapper>
@@ -157,18 +135,27 @@ const Main = () => {
       </Details>
 
       {open.addMoney && (
-        <MotionInputs onClose={closeOpen}>
+        <MotionInputs onClose={closeAll}>
           <MainInputs
-            onClose={handleMoney}
-            onCategory={handleCategory}
+            onClose={() => handleToggle('addMoney')}
+            onCategory={() => handleToggle('category')}
             onSubmit={setMoney}
           />
         </MotionInputs>
       )}
 
       {open.category && (
-        <MotionInputs onClose={closeOpen}>
-          <CategorySelect onCategory={handleCategory} x />
+        <MotionInputs onClose={closeAll}>
+          <CategorySelect
+            onCategory={() => handleToggle('category')}
+            onAddCate={() => handleToggle('addCategory')}
+          />
+        </MotionInputs>
+      )}
+
+      {open.addCategory && (
+        <MotionInputs height="70vh" onClose={closeAll}>
+          <CategoryUpdate onAddCate={() => handleToggle('addCategory')} />
         </MotionInputs>
       )}
     </Wrapper>

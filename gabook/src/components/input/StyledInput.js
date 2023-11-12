@@ -16,6 +16,8 @@ const InputWrapper = styled.input`
   &:focus {
     outline: ${({ $outline }) => ($outline ? $outline : '1px solid lightgray')};
   }
+
+  white-space: nowrap;
 `;
 
 const StyledInput = (props) => {
@@ -29,6 +31,7 @@ const StyledInput = (props) => {
         ref={props.inputRef}
         placeholder={props.placeholder}
         type={props.type}
+        onBlur={props.onBlur}
         max={'2050-05-05'}
         min={'2023-05-05'}
       />

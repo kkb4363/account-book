@@ -52,6 +52,8 @@ const InputWrapper = styled.div`
     cursor: pointer;
     padding-right: 1rem;
   }
+
+  white-space: nowrap;
 `;
 
 const CurrentCateogry = styled.div`
@@ -145,6 +147,7 @@ const MainInputs = (props) => {
           fontsize="18px"
           width="95%"
           type="date"
+          placeholder="날짜를 선택해주세요"
           inputRef={selectedDateRef}
         />
       </InputWrapper>

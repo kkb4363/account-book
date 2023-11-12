@@ -30,7 +30,7 @@ const MotionInputWrapper = styled.div`
 const MotionInputs = (props) => {
   return (
     <>
-      <MotionInputWrapper>{props.children}</MotionInputWrapper>
+      <MotionInputWrapper $height={props.height}>{props.children}</MotionInputWrapper>
       <Overlay onClose={props.onClose} />
     </>
   );

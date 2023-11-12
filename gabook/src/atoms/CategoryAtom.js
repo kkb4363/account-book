@@ -1,5 +1,6 @@
 import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
+import { defaultCategories } from '../components/category/\bcategories';
 
 const { persistAtom } = recoilPersist({
   key: 'local',
@@ -8,7 +9,7 @@ const { persistAtom } = recoilPersist({
 
 export const currentCategoriesAtom = atom({
   key: 'currentCategoriesAtomkey',
-  default: [],
+  default: defaultCategories,
   effects: [persistAtom],
 });
 

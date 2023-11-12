@@ -78,14 +78,14 @@ const CategorySelect = (props) => {
         </HeaderTitle>
 
         <HeaderUpdateCategory>
-          <span>
+          <span onClick={props.onAddCate}>
             <MdModeEditOutline />
           </span>
           <span>카테고리 수정</span>
         </HeaderUpdateCategory>
       </CategorySelectHeader>
 
-      <CategoryView onCategory={props.onCategory} />
+      <CategoryView onClick={props.onCategory} />
     </CategorySelectWrapper>
   );
 };

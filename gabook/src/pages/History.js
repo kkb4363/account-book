@@ -1,10 +1,16 @@
 import { keyframes, styled } from 'styled-components';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
 import HistoryItem from '../components/history/HistoryItem';
 import { historyAtom } from '../atoms/HistoryAtom';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import MotionInputs from '../components/motion/MotionInput';
+import HistoryUpdate from '../components/history/HistoryUpdate';
+import UseHandler from '../hooks/UseHandler';
+import CategorySelect from '../components/category/CategorySelect';
+import CategoryUpdate from '../components/category/CategoryUpdate';
+import { currentCategoryAtom } from '../atoms/CategoryAtom';
 
 const HistoryKeyframes = keyframes`
   from{
@@ -107,9 +113,15 @@ const CurrentText = styled.span`
 
 const History = () => {
   const history = useRecoilValue(historyAtom);
+  const setCurrentCategory = useSetRecoilState(currentCategoryAtom);
   const navigate = useNavigate();
-
   const date = new Date();
+  const [edit, setEdit] = useState({
+    open: false,
+    id: '',
+  });
+  const fields = ['category', 'addCategory'];
+  const [open, closeAll, handleToggle] = UseHandler(fields);
 
   const [current, setCurrent] = useState({
     month: date.getMonth() + 1,
@@ -129,29 +141,43 @@ const History = () => {
     const nextYear = nextmon === 1 ? current.year + 1 : current.year;
     setCurrent({ month: nextmon, year: nextYear });
   };
+  const openEditHandler = (sid) => {
+    setEdit({
+      open: true,
+      id: sid,
+    });
+  };
+  const closeEditHandler = () => {
+    setEdit({
+      open: false,
+      id: '',
+    });
+    setCurrentCategory({
+      icons: '',
+      text: '',
+    });
+  };
+
+  const openCategory = () => handleToggle('category');
 
   const prevMonth = current.month - 1 == 0 ? 12 : current.month - 1;
   const nextMonth = current.month + 1 == 13 ? 1 : current.month + 1;
   const currentDate = current.year + '' + current.month;
 
   const validDatas = history?.filter((item) => {
-    const checkValue = item.date.slice(0, 4) + item.date.slice(5, 7);
+    const checkValue = item?.date?.slice(0, 4) + item?.date?.slice(5, 7);
     return checkValue == currentDate;
   });
 
   const expenses = validDatas?.reduce((acc, cur) => {
     const isMinus = Number(cur.cost) < 0;
-
     if (isMinus) acc -= Number(cur.cost);
-
     return acc;
   }, 0);
 
   const income = validDatas?.reduce((acc, cur) => {
     const isMinus = Number(cur.cost) < 0;
-
     if (!isMinus) acc += Number(cur.cost);
-
     return acc;
   }, 0);
 
@@ -189,9 +215,35 @@ const History = () => {
             cost={his.cost}
             cate={his.category}
             id={his.id}
+            onEdit={openEditHandler}
           />
         ))}
       </CurrentHistory>
+
+      {edit.open && (
+        <MotionInputs height="30vh" onClose={closeEditHandler}>
+          <HistoryUpdate
+            selectedId={edit.id}
+            onClose={closeEditHandler}
+            onCate={openCategory}
+          />
+        </MotionInputs>
+      )}
+
+      {open.category && (
+        <MotionInputs onClose={closeAll}>
+          <CategorySelect
+            onCategory={openCategory}
+            onAddCate={() => handleToggle('addCategory')}
+          />
+        </MotionInputs>
+      )}
+
+      {open.addCategory && (
+        <MotionInputs height="70vh" onClose={closeAll}>
+          <CategoryUpdate onAddCate={() => handleToggle('addCategory')} />
+        </MotionInputs>
+      )}
     </HistoryWrapper>
   );
 };
