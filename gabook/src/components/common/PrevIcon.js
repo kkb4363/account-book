@@ -1,14 +1,12 @@
 import styled from 'styled-components';
 import { BsChevronLeft } from 'react-icons/bs';
+import { flexCenter, fullSize } from '../../styled/styled';
 const PrevIconWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  ${fullSize};
+  ${flexCenter};
 
-  width: 100%;
-  height: 100%;
-  font-size: 24px;
-  font-weight: 600;
+  font-size: ${({ theme }) => theme.fontsize.xxxl};
+  font-weight: ${({ theme }) => theme.weight.lg};
 `;
 
 const PrevIcon = () => {

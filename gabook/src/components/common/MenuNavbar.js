@@ -1,6 +1,7 @@
-import styled, { keyframes } from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import styled, { keyframes } from 'styled-components';
 import Overlay from './Overlay';
+import { flexColumn } from '../../styled/styled';
 
 const menunavbar_keyframes = keyframes`
     from{
@@ -14,27 +15,27 @@ const menunavbar_keyframes = keyframes`
 `;
 
 const MenuNavbarWrapper = styled.div`
-  position: absolute;
-  right: 0;
   width: 30%;
   height: 100vh;
-  background: white;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  position: absolute;
   z-index: 1;
-
+  right: 0;
+  background: white;
+  ${flexColumn};
+  align-items: center;
   animation: ${menunavbar_keyframes} 0.5s ease-in-out;
 `;
 
 const MenuNavbarItem = styled.div`
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: rgb(0, 0, 0, 0.5);
-  cursor: pointer;
   margin: 1.5rem 0;
   padding: 0.5rem;
   border-radius: 0.5rem;
+  cursor: pointer;
+
+  font-size: ${({ theme }) => theme.fontsize.xl};
+  font-weight: ${({ theme }) => theme.weight.xxl};
+  color: rgb(0, 0, 0, 0.5);
+
   &:hover {
     color: rgb(0, 0, 0, 0.1);
   }

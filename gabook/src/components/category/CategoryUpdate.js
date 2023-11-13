@@ -9,53 +9,49 @@ import Overlay from '../common/Overlay';
 import PrevIcon from '../common/PrevIcon';
 import StyledInput from '../input/StyledInput';
 import CategoryView from './CategoryView';
+import { flexCenter, flexColumn, fullSize } from '../../styled/styled';
 
 const CategoryUpdateWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-
+  ${fullSize};
+  ${flexColumn};
   box-sizing: border-box;
   padding: 1rem 2rem 2rem 2rem;
-  width: 100%;
-  height: 100%;
 `;
 
 const PrevWrapper = styled.div`
   width: 10%;
   height: 10%;
-
   margin-left: -0.5rem;
   margin-top: -0.5rem;
   cursor: pointer;
+
   @media screen and (min-width: 1000px) {
     margin-left: -4rem;
   }
 `;
 
 const HeaderTitle = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
   width: 65%;
   height: 10%;
+  ${flexColumn};
+  gap: 0.25rem;
 
-  font-weight: 600;
+  font-weight: ${({ theme }) => theme.weight.lg};
   span:first-child {
-    font-size: 18px;
+    font-size: ${({ theme }) => theme.fontsize.lg};
   }
   span:last-child {
-    font-size: 12px;
+    font-size: ${({ theme }) => theme.fontsize.xs};
     color: lightgray;
   }
 `;
 
 const AddCategoryInput = styled.div`
+  width: 100%;
+  height: 10%;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-
-  width: 100%;
-  height: 10%;
 
   @media screen and (min-width: 1000px) {
     justify-content: flex-start;
@@ -67,13 +63,10 @@ const SetIcon = styled.div`
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  font-size: 1rem;
+  ${flexCenter};
   background: lightgray;
+
+  font-size: ${({ theme }) => theme.fontsize.md};
 `;
 
 const EmojipickerWrapper = styled.div`
@@ -90,8 +83,8 @@ const PrevCategoryTitle = styled.div`
   margin-bottom: 0.425rem;
 
   span {
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: ${({ theme }) => theme.fontsize.lg};
+    font-weight: ${({ theme }) => theme.weight.lg};
   }
 `;
 
@@ -101,15 +94,15 @@ const CategoryViewWrapper = styled.div`
 `;
 
 const CategoryUpdate = (props) => {
-  const newCategoryNameRef = useRef('');
+  const addCategory = useSetRecoilState(currentCategoriesAtom);
   const [emojiOpen, setEmojiOpen] = useState(false);
   const [nameError, setNameError] = useState(false);
-
   const [icon, setIcon] = useState('😀');
+  const newCategoryNameRef = useRef('');
 
-  const addCategory = useSetRecoilState(currentCategoriesAtom);
-
-  const emojiHandler = () => setEmojiOpen((prev) => !prev);
+  const emojiHandler = () => {
+    setEmojiOpen((prev) => !prev);
+  };
   const clickEmojiHandler = (emoji) => {
     setIcon(emoji.emoji);
     emojiHandler();
@@ -126,14 +119,11 @@ const CategoryUpdate = (props) => {
         text: newCategoryNameRef.current.value,
       },
     ]);
-
     newCategoryNameRef.current.value = '';
   };
   const handleNameError = () => {
-    if (
-      newCategoryNameRef.current.value == '' ||
-      newCategoryNameRef.current.value == undefined
-    )
+    const newCategoryNameValue = newCategoryNameRef.current.value;
+    if (newCategoryNameValue == '' || newCategoryNameValue == undefined)
       setNameError(true);
     else setNameError(false);
   };

@@ -1,4 +1,5 @@
 import styled, { keyframes } from 'styled-components';
+import { flexColumn } from '../../styled/styled';
 import Overlay from '../common/Overlay';
 
 const motionInput_keyframes = keyframes`
@@ -11,13 +12,11 @@ const motionInput_keyframes = keyframes`
 `;
 
 const MotionInputWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  border-top-left-radius: 1.25rem;
-  border-top-right-radius: 1.25rem;
-
   width: ${({ $width }) => ($width ? $width : '100vw')};
   height: ${({ $height }) => ($height ? $height : ' 50vh')};
+  ${flexColumn};
+  border-top-left-radius: 1.25rem;
+  border-top-right-radius: 1.25rem;
   background: white;
   position: absolute;
   bottom: 0;

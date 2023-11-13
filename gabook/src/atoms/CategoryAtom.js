@@ -3,12 +3,12 @@ import { recoilPersist } from 'recoil-persist';
 import { defaultCategories } from '../components/category/\bcategories';
 
 const { persistAtom } = recoilPersist({
-  key: 'local',
+  key: 'localstorage-category',
   storage: localStorage,
 });
 
 export const currentCategoriesAtom = atom({
-  key: 'currentCategoriesAtomkey',
+  key: 'currentCategoriesAtom',
   default: defaultCategories,
   effects: [persistAtom],
 });

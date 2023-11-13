@@ -3,13 +3,14 @@ import styled from 'styled-components';
 const InputWrapper = styled.input`
   width: ${({ $width }) => ($width ? $width : '18rem')};
   height: ${({ $height }) => ($height ? $height : '2.5rem')};
-  font-size: ${({ $fontsize }) => ($fontsize ? $fontsize : '14px')};
+  box-sizing: border-box;
+  padding-left: 1rem;
   background: white;
   border: ${({ $borderStyle }) => ($borderStyle ? $borderStyle : 'none;')};
   border-radius: 0.5rem;
+
+  font-size: ${({ $fontsize }) => ($fontsize ? $fontsize : '14px')};
   white-space: nowrap;
-  box-sizing: border-box;
-  padding-left: 1rem;
 
   &:focus {
     outline: ${({ $outline }) => ($outline ? $outline : '1px solid lightgray')};

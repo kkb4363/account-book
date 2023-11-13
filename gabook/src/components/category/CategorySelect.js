@@ -1,15 +1,12 @@
-import styled from 'styled-components';
 import { MdModeEditOutline } from 'react-icons/md';
+import styled from 'styled-components';
 import PrevIcon from '../common/PrevIcon';
 import CategoryView from './CategoryView';
+import { flexColumn, fullSize } from '../../styled/styled';
 
 const CategorySelectWrapper = styled.div`
-  width: 100%;
-  height: 100%;
-
-  display: flex;
-  flex-direction: column;
-
+  ${fullSize};
+  ${flexColumn};
   box-sizing: border-box;
   padding: 1.25rem;
 `;
@@ -17,49 +14,47 @@ const CategorySelectWrapper = styled.div`
 const PrevWrapper = styled.div`
   width: 5%;
   height: 20%;
-  cursor: pointer;
   margin-bottom: 2rem;
+  cursor: pointer;
 `;
 
 const CategorySelectHeader = styled.div`
+  width: 100%;
+  height: 20%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-
-  width: 100%;
-  height: 20%;
   box-sizing: border-box;
   padding-bottom: 3rem;
 `;
 
 const HeaderTitle = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
   width: 65%;
   height: 100%;
+  ${flexColumn};
+  gap: 0.6rem;
 
-  font-weight: 600;
+  font-weight: ${({ theme }) => theme.weight.lg};
   span:first-child {
-    font-size: 18px;
+    font-size: ${({ theme }) => theme.fontsize.lg};
   }
   span:last-child {
-    font-size: 14px;
-    color: rgb(0, 0, 0, 0.3);
+    font-size: ${({ theme }) => theme.fontsize.sm};
+    color: ${({ theme }) => theme.colors.dark};
   }
 `;
 
 const HeaderUpdateCategory = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
   width: 10%;
   height: 100%;
+  ${flexColumn};
+  align-items: center;
+  gap: 0.5rem;
 
   span {
-    font-size: 18px;
-    font-weight: 600;
+    font-size: ${({ theme }) => theme.fontsize.lg};
+    font-weight: ${({ theme }) => theme.weight.lg};
+    cursor: pointer;
   }
 `;
 const CategorySelect = (props) => {
@@ -76,7 +71,7 @@ const CategorySelect = (props) => {
         </HeaderTitle>
 
         <HeaderUpdateCategory>
-          <span style={{ cursor: 'pointer' }} onClick={props.onAddCate}>
+          <span onClick={props.onAddCate}>
             <MdModeEditOutline />
           </span>
         </HeaderUpdateCategory>

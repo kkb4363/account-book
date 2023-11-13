@@ -5,78 +5,77 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { currentCategoryAtom } from '../../atoms/CategoryAtom';
 import { historyAtom } from '../../atoms/HistoryAtom';
+import UseValidate from '../../hooks/UseValidate';
+import { flexColumn, fullSize } from '../../styled/styled';
 import StyledButton from '../button/StyledButton';
 import Dropdown from '../common/Dropdown';
 import StyledInput from '../input/StyledInput';
-import UseValidate from '../../hooks/UseValidate';
 
 const MainInputsWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
+  ${fullSize};
+  ${flexColumn};
   box-sizing: border-box;
   padding: 1.5rem 1rem 1rem 1rem;
   gap: 1rem;
 `;
 
 const MainInputsTitle = styled.div`
-  display: flex;
-  flex-direction: column;
+  ${flexColumn};
   gap: 0.25rem;
-  font-weight: 600;
+
+  font-weight: ${({ theme }) => theme.weight.lg};
 
   span:first-child {
-    font-size: 18px;
+    font-size: ${({ theme }) => theme.fontsize.lg};
   }
   span:last-child {
-    font-size: 0.85rem;
-    color: rgb(0, 0, 0, 0.4);
+    font-size: ${({ theme }) => theme.fontsize.sm};
+    color: ${({ theme }) => theme.colors.dark};
   }
 `;
 
 const InputWrapper = styled.div`
+  width: 100%;
+  height: 15%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 100%;
-  height: 15%;
   background: white;
   border-radius: 0.5rem;
-  white-space: nowrap;
   position: relative;
 
+  white-space: nowrap;
   span {
-    font-size: 1.25rem;
-    font-weight: 600;
-    cursor: pointer;
-    padding-right: 1rem;
     display: flex;
+    padding-right: 1rem;
+    cursor: pointer;
+
+    font-size: ${({ theme }) => theme.fontsize.xl};
+    font-weight: ${({ theme }) => theme.weight.lg};
   }
 `;
 
 const CurrentCateogry = styled.div`
-  display: flex;
-  padding-left: 1rem;
   width: 20%;
-  align-items: center;
   height: 100%;
+  display: flex;
+  align-items: center;
   gap: 1rem;
+  padding-left: 1rem;
 
   p {
-    font-size: 1rem;
+    font-size: ${({ theme }) => theme.fontsize.md};
     color: rgb(0, 0, 0, 0.5);
     white-space: nowrap;
   }
 `;
 
 const MainInputsBtnWrapper = styled.div`
+  width: 100%;
+  height: 25%;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-
-  width: 100%;
-  height: 25%;
 `;
 
 const AddHistory = (props) => {
@@ -84,9 +83,10 @@ const AddHistory = (props) => {
   const setHistory = useSetRecoilState(historyAtom);
   const [openType, setOpenType] = useState(false);
   const [selectedType, setSelectedType] = useState('지출');
+  const { validateOnlyNumbers } = UseValidate();
   const selectedDateRef = useRef('');
-  const moneyRef = useRef('');
   const detailRef = useRef('');
+  const moneyRef = useRef('');
   const navi = useNavigate();
 
   const onAddHistory = async () => {
@@ -131,61 +131,64 @@ const AddHistory = (props) => {
     },
   ];
 
-  const { validateOnlyNumbers } = UseValidate();
-  return (
-    <MainInputsWrapper>
-      <MainInputsTitle>
-        <span>Add History</span>
-        <span>내역을 추가해주세요</span>
-      </MainInputsTitle>
+  const inputItems = [
+    {
+      item: (
+        <>
+          <CurrentCateogry onClick={props.onCategory}>
+            {showCurrentCategory.map((item) => item.condition && item.data)}
+          </CurrentCateogry>
 
-      <InputWrapper>
-        <CurrentCateogry onClick={props.onCategory}>
-          {showCurrentCategory.map((item) => item.condition && item.data)}
-        </CurrentCateogry>
-
-        <span onClick={props.onCategory}>
-          <BsChevronDown />
-        </span>
-      </InputWrapper>
-
-      <InputWrapper>
-        <StyledInput
-          outline={'none'}
-          fontsize="18px"
-          type="number"
-          placeholder={'금액을 입력해주세요'}
-          inputRef={moneyRef}
-          onChange={validateOnlyNumbers}
-        />
-        <span onClick={openTypeHandler}>
-          {selectedType}{' '}
-          {openType ? (
-            <div>
-              <BsChevronUp />
-            </div>
-          ) : (
-            <div>
-              <BsChevronDown />
-            </div>
-          )}
-        </span>
-        {openType && <Dropdown onHandle={handleType} />}
-      </InputWrapper>
-
-      <InputWrapper>
-        <StyledInput
-          outline={'none'}
-          fontsize="18px"
-          type="text"
-          width="80vw"
-          placeholder="내용을 입력해주세요"
-          inputRef={detailRef}
-        />
-        <span />
-      </InputWrapper>
-
-      <InputWrapper>
+          <span onClick={props.onCategory}>
+            <BsChevronDown />
+          </span>
+        </>
+      ),
+    },
+    {
+      item: (
+        <>
+          <StyledInput
+            outline={'none'}
+            fontsize="18px"
+            type="number"
+            placeholder={'금액을 입력해주세요'}
+            inputRef={moneyRef}
+            onChange={validateOnlyNumbers}
+          />
+          <span onClick={openTypeHandler}>
+            {selectedType}{' '}
+            {openType ? (
+              <div>
+                <BsChevronUp />
+              </div>
+            ) : (
+              <div>
+                <BsChevronDown />
+              </div>
+            )}
+          </span>
+          {openType && <Dropdown onHandle={handleType} />}
+        </>
+      ),
+    },
+    {
+      item: (
+        <>
+          <StyledInput
+            outline={'none'}
+            fontsize="18px"
+            type="text"
+            width="80vw"
+            placeholder="내용을 입력해주세요"
+            inputRef={detailRef}
+          />
+          <span />
+        </>
+      ),
+    },
+    {
+      item: (
         <StyledInput
           outline={'none'}
           fontsize="18px"
@@ -194,7 +197,19 @@ const AddHistory = (props) => {
           placeholder="날짜를 선택해주세요"
           inputRef={selectedDateRef}
         />
-      </InputWrapper>
+      ),
+    },
+  ];
+  return (
+    <MainInputsWrapper>
+      <MainInputsTitle>
+        <span>Add History</span>
+        <span>내역을 추가해주세요</span>
+      </MainInputsTitle>
+
+      {inputItems.map((item, idx) => (
+        <InputWrapper key={'inputwrapperkey' + idx}>{item.item}</InputWrapper>
+      ))}
 
       <MainInputsBtnWrapper>
         <StyledButton

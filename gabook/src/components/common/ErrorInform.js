@@ -1,24 +1,19 @@
-import styled from 'styled-components';
 import { BiErrorCircle } from 'react-icons/bi';
-
-const errorTextColor = 'rgb(190 31 39)';
-const errorBgColor = 'rgb(254 233 233)';
+import styled from 'styled-components';
+import { flexCenter } from '../../styled/styled';
 
 const ErrorInformWrapper = styled.div`
   width: 12rem;
   height: 1.5rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: ${errorTextColor};
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
+  ${flexCenter};
   gap: 0.2rem;
 
+  font-size: ${({ theme }) => theme.fontsize.sm};
+  font-weight: ${({ theme }) => theme.weight.lg};
+  color: ${({ theme }) => theme.colors.error};
+
   div {
-    font-size: 1rem;
+    font-size: ${({ theme }) => theme.fontsize.md};
   }
 `;
 

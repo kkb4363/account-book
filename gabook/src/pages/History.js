@@ -11,6 +11,7 @@ import HistoryItem from '../components/history/HistoryItem';
 import HistoryUpdate from '../components/history/HistoryUpdate';
 import MotionInputs from '../components/motion/MotionInput';
 import UseHandler from '../hooks/UseHandler';
+import { flexColumn, fullScreen } from '../styled/styled';
 
 const HistoryKeyframes = keyframes`
   from{
@@ -22,43 +23,39 @@ const HistoryKeyframes = keyframes`
 `;
 
 const HistoryWrapper = styled.div`
-  width: 100vw;
-  height: 100vh;
-
-  display: flex;
-  flex-direction: column;
-
+  ${fullScreen};
+  ${flexColumn};
   animation: ${HistoryKeyframes} 0.5s ease-in-out;
 `;
 
 const HistoryHeader = styled.div`
   width: 100%;
   height: 30%;
-  background: #eaeaea;
-  display: flex;
-  flex-direction: column;
+  ${flexColumn};
   justify-content: space-around;
-
+  background: #eaeaea;
   box-sizing: border-box;
   padding: 0 2rem 0 2rem;
 
   div:first-child {
-    font-size: 1.5rem;
     margin-left: -1.5rem;
     cursor: pointer;
+
+    font-size: ${({ theme }) => theme.fontsize.xxxl};
   }
 `;
 
 const HeaderDate = styled.div`
+  width: 100%;
+  height: 25%;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  width: 100%;
-  height: 25%;
-  color: lightgray;
 
   font-size: 2rem;
-  font-weight: 600;
+  font-weight: ${({ theme }) => theme.weight.lg};
+  color: lightgray;
+
   span:nth-child(3) {
     color: black;
   }
@@ -75,64 +72,62 @@ const HeaderDate = styled.div`
 `;
 
 const HeaderTotal = styled.div`
-  display: flex;
-  flex-direction: column;
   width: 40%;
   height: 35%;
+  ${flexColumn};
   gap: 0.45rem;
 
-  font-size: 14px;
-  font-weight: 600;
+  font-size: ${({ theme }) => theme.fontsize.sm};
+  font-weight: ${({ theme }) => theme.weight.lg};
+
   span:first-child {
+    font-size: ${({ theme }) => theme.fontsize.md};
     color: gray;
-    font-size: 1rem;
   }
   span:nth-child(3) {
-    color: #ff3333;
+    color: ${({ theme }) => theme.colors.error};
   }
   span:last-child {
-    color: #0075ff;
+    color: ${({ theme }) => theme.colors.blue};
   }
 `;
 
 const CurrentHistory = styled.div`
   width: 100%;
   height: 50%;
+  ${flexColumn};
+  gap: 1rem;
   box-sizing: border-box;
   padding: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
   overflow: scroll;
+
   &::-webkit-scrollbar {
     display: none;
   }
 `;
 
 const CurrentText = styled.span`
-  font-size: 1.5rem;
-  font-weight: 600;
-
+  width: 100%;
+  height: 10%;
   display: flex;
   align-items: center;
   padding-left: 1.5rem;
-  width: 100%;
-  height: 10%;
+
+  font-size: ${({ theme }) => theme.fontsize.xxxl};
+  font-weight: ${({ theme }) => theme.weight.lg};
 `;
 
 const History = () => {
-  const history = useRecoilValue(historyAtom);
   const setCurrentCategory = useSetRecoilState(currentCategoryAtom);
+  const history = useRecoilValue(historyAtom);
   const navigate = useNavigate();
   const date = new Date();
   const fields = ['category', 'addCategory'];
   const [open, closeAll, handleToggle] = UseHandler(fields);
-
   const [edit, setEdit] = useState({
     open: false,
     id: '',
   });
-
   const [current, setCurrent] = useState({
     month: date.getMonth() + 1,
     year: date.getFullYear(),

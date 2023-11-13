@@ -1,51 +1,48 @@
 import React, { useRef } from 'react';
+import { GiHamburgerMenu } from 'react-icons/gi';
 import { useSetRecoilState } from 'recoil';
 import { styled } from 'styled-components';
 import { moneyAtom } from '../atoms/MoneyAtom';
 import StyledButton from '../components/button/StyledButton';
 import CategorySelect from '../components/category/CategorySelect';
 import CategoryUpdate from '../components/category/CategoryUpdate';
-import StyledInput from '../components/input/StyledInput';
+import MenuNavbar from '../components/common/MenuNavbar';
 import MainInputs from '../components/main/AddHistory';
 import MotionInputs from '../components/motion/MotionInput';
 import UseHandler from '../hooks/UseHandler';
 import bgimage from '../images/bg.png';
-import { GiHamburgerMenu } from 'react-icons/gi';
-import MenuNavbar from '../components/common/MenuNavbar';
+import { flexColumn, fullScreen } from '../styled/styled';
 
 const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
+  ${fullScreen};
+  ${flexColumn};
   justify-content: center;
   align-items: center;
-  width: 100vw;
-  height: 100vh;
   background-image: url(${bgimage});
   background-size: cover;
 `;
 
 const MainText = styled.div`
-  display: flex;
-  flex-direction: column;
-  color: white;
+  ${flexColumn};
   margin-bottom: 0;
-  font-weight: 800;
+
+  font-weight: ${({ theme }) => theme.weight.xxl};
   span:first-child {
     font-size: 2rem;
     text-align: center;
   }
   span:last-child {
-    font-size: 1.25rem;
+    font-size: ${({ theme }) => theme.weight.xl};
   }
 `;
 
 const InputMoney = styled.div`
+  width: 100%;
+  height: 7.5vh;
   display: flex;
   justify-content: center;
   align-items: flex-end;
   gap: 0.5rem;
-  height: 7.5vh;
-  width: 100%;
 
   @media screen and (min-width: 1000px) {
     width: 80%;
@@ -56,9 +53,10 @@ export const Menubar = styled.div`
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
-  color: white;
-  font-size: 1.5rem;
   cursor: pointer;
+
+  font-size: 1.5rem;
+  color: white;
 
   &:hover {
     color: lightgray;
@@ -75,10 +73,10 @@ const mainText = [
 ];
 
 const Main = () => {
-  const inputref = useRef('');
   const setMoneyAtom = useSetRecoilState(moneyAtom);
   const fields = ['addMoney', 'category', 'addCategory', 'menubar'];
   const [open, closeAll, handleToggle] = UseHandler(fields);
+  const inputref = useRef('');
 
   const setMoney = (e) => {
     e.preventDefault();
@@ -89,7 +87,7 @@ const Main = () => {
     handleToggle('addMoney');
   };
 
-  const opens = [
+  const openItems = [
     {
       condition: 'menubar',
       data: <MenuNavbar onClose={() => handleToggle('menubar')} />,
@@ -150,7 +148,7 @@ const Main = () => {
         <GiHamburgerMenu />
       </Menubar>
 
-      {opens.map(
+      {openItems.map(
         (item, idx) =>
           open[item.condition] && (
             <React.Fragment key={'opendataskey' + idx}>{item.data}</React.Fragment>

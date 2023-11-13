@@ -1,74 +1,62 @@
-import styled from 'styled-components';
-import { HistoryIcon, HistoryIconWrapper } from './HistoryItem';
 import { useRef, useState } from 'react';
-import { useRecoilCallback, useRecoilValue } from 'recoil';
-import { historyAtom } from '../../atoms/HistoryAtom';
-import { currentCategoryAtom } from '../../atoms/CategoryAtom';
 import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
-import Dropdown from '../common/Dropdown';
+import { useRecoilCallback, useRecoilValue } from 'recoil';
+import styled from 'styled-components';
+import { currentCategoryAtom } from '../../atoms/CategoryAtom';
+import { historyAtom } from '../../atoms/HistoryAtom';
 import UseValidate from '../../hooks/UseValidate';
+import Dropdown from '../common/Dropdown';
+import { HistoryIcon, HistoryIconWrapper } from './HistoryItem';
+import { flexCenter, flexColumn, fullSize } from '../../styled/styled';
 
 const HistoryUpdateWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  width: 100%;
-  height: 100%;
-
+  ${flexColumn};
+  ${fullSize};
   box-sizing: border-box;
   padding: 2rem;
 
   span:nth-child(1) {
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: ${({ theme }) => theme.fontsize.xl};
+    font-weight: ${({ theme }) => theme.weight.lg};
   }
 `;
 
 const UpdateWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
   width: 100%;
   height: 60%;
+  ${flexCenter};
 `;
 
 const UpdateInputWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  height: 100%;
+  ${fullSize};
+  ${flexColumn};
 `;
 
 const UpdateInput = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  ${fullSize};
+  ${flexCenter};
 
   p {
-    font-size: 1rem;
+    font-size: ${({ theme }) => theme.fontsize.md};
     color: rgb(0, 0, 0, 0.5);
   }
 `;
 
 const UpdateItemWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  width: 100%;
+  ${flexCenter};
+  ${fullSize};
 
   input {
-    border: 1px solid white;
     width: 60%;
     height: 50%;
-    background: rgb(0, 0, 0, 0.1);
+    border: 1px solid white;
     border-radius: 0.5rem;
+    background: rgb(0, 0, 0, 0.1);
+
     color: black;
 
     &::placeholder {
-      font-size: 1.25rem;
+      font-size: ${({ theme }) => theme.fontsize.xl};
     }
     &:focus {
       outline: none;
@@ -76,33 +64,32 @@ const UpdateItemWrapper = styled.div`
   }
 
   span {
-    font-size: 1.25rem;
+    font-size: ${({ theme }) => theme.fontsize.xl};
     color: gray;
   }
 `;
 
 const SetType = styled.div`
-  font-size: 1.25rem;
+  position: relative;
+  cursor: pointer;
+
+  font-size: ${({ theme }) => theme.fontsize.xl};
   color: rgb(0, 0, 0, 0.5);
   white-space: nowrap;
-  cursor: pointer;
-  position: relative;
 `;
 
 const ButtonWrapper = styled.div`
+  width: 100%;
+  height: 30%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 
-  width: 100%;
-  height: 30%;
-
   div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    ${flexCenter};
     box-shadow: 1px 1px 10px black;
     cursor: pointer;
+
     &:hover {
       opacity: 0.8;
     }
@@ -112,34 +99,37 @@ const ButtonWrapper = styled.div`
     width: 30%;
     height: 100%;
     background: white;
-    color: gray;
-    font-weight: 600;
     border-top-left-radius: 1rem;
     border-bottom-left-radius: 1rem;
+
+    font-weight: ${({ theme }) => theme.weight.lg};
+    color: gray;
   }
 
   div:last-child {
     width: 70%;
     height: 100%;
     background: #3f3e3e;
-    color: white;
-    font-weight: 600;
     border-top-right-radius: 1rem;
     border-bottom-right-radius: 1rem;
+
+    font-weight: ${({ theme }) => theme.weight.lg};
+    color: white;
   }
 `;
 
 const HistoryUpdate = (props) => {
   const currentCategory = useRecoilValue(currentCategoryAtom);
   const history = useRecoilValue(historyAtom);
-  const updateCostRef = useRef('');
-  const updateDetailRef = useRef('');
   const selectedHistory = history.filter((his) => his?.id == props.selectedId)[0];
   const isChangedIcon =
     selectedHistory?.category.icons != currentCategory.icons &&
     currentCategory.icons !== '';
-  const [openType, setOpentype] = useState(false);
   const [changedType, setChangedType] = useState(selectedHistory.type);
+  const [openType, setOpentype] = useState(false);
+  const updateCostRef = useRef('');
+  const updateDetailRef = useRef('');
+
   const onOpenType = () => {
     setOpentype(true);
   };

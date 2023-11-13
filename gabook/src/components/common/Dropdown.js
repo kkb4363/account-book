@@ -1,4 +1,5 @@
 import styled, { keyframes } from 'styled-components';
+import { flexCenter } from '../../styled/styled';
 
 const dropdown_keyframes = keyframes`
     from{
@@ -12,42 +13,49 @@ const dropdown_keyframes = keyframes`
 `;
 
 const DropdownWrapper = styled.div`
+  width: 6rem;
+  height: 6rem;
+  ${flexCenter};
+  flex-direction: column;
   position: absolute;
   right: 0;
   bottom: -5rem;
-  width: 6rem;
-  height: 6rem;
+  z-index: 1;
   background: white;
   border-radius: 10px;
   border: 1px solid rgb(0, 0, 0, 0.3);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   box-shadow: 1px 1px 10px rgb(0, 0, 0, 0.3);
-  z-index: 1;
+  animation: ${dropdown_keyframes} 0.5s ease-in-out;
 
   button {
-    font-size: 1.2rem;
-    font-weight: 600;
-    color: rgb(0, 0, 0, 0.6);
-    padding: 0.5rem;
-    cursor: pointer;
-    border: none;
     background: inherit;
+    padding: 0.5rem;
+    border: none;
+    cursor: pointer;
+
+    font-size: ${({ theme }) => theme.fontsize.lg};
+    font-weight: ${({ theme }) => theme.weight.lg};
+    color: rgb(0, 0, 0, 0.6);
   }
-  animation: ${dropdown_keyframes} 0.5s ease-in-out;
 `;
 
 const Dropdown = (props) => {
+  const dropdownItems = [
+    {
+      iname: '지출',
+    },
+    {
+      iname: '수입',
+    },
+  ];
+
   return (
     <DropdownWrapper>
-      <button name="지출" onClick={props.onHandle}>
-        지출
-      </button>
-      <button name="수입" onClick={props.onHandle}>
-        수입
-      </button>
+      {dropdownItems.map((item) => (
+        <button key={item.iname} name={item.iname} onClick={props.onHandle}>
+          {item.iname}
+        </button>
+      ))}
     </DropdownWrapper>
   );
 };

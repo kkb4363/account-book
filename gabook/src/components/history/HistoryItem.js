@@ -1,10 +1,10 @@
-import styled from 'styled-components';
-import { MdModeEditOutline } from 'react-icons/md';
-import { AiFillDelete } from 'react-icons/ai';
-import { useRecoilState } from 'recoil';
-import { historyAtom } from '../../atoms/HistoryAtom';
-import { GiHamburgerMenu } from 'react-icons/gi';
 import { useState } from 'react';
+import { AiFillDelete } from 'react-icons/ai';
+import { GiHamburgerMenu } from 'react-icons/gi';
+import { useRecoilState } from 'recoil';
+import styled from 'styled-components';
+import { historyAtom } from '../../atoms/HistoryAtom';
+import { flexCenter, flexColumn } from '../../styled/styled';
 import DeleteConfirm from '../common/DeleteConfirm';
 
 const HistoryItemWrapper = styled.div`
@@ -18,17 +18,15 @@ const HistoryItemWrapper = styled.div`
 export const HistoryIconWrapper = styled.div`
   width: 15%;
   height: 100%;
-
-  display: flex;
-  flex-direction: column;
+  ${flexColumn};
   justify-content: center;
   align-items: center;
   gap: 0.25rem;
 
   span {
-    font-size: 0.8rem;
+    font-size: ${({ theme }) => theme.fontsize.sm};
+    font-weight: ${({ theme }) => theme.weight.lg};
     color: gray;
-    font-weight: 600;
     white-space: nowrap;
   }
 `;
@@ -36,34 +34,29 @@ export const HistoryIconWrapper = styled.div`
 export const HistoryIcon = styled.div`
   width: 2.5rem;
   height: 2.5rem;
+  ${flexCenter};
   border-radius: 50%;
   background: #ababab;
-  font-size: 1.5rem;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
   cursor: pointer;
+
+  font-size: ${({ theme }) => theme.fontsize.xxxl};
 `;
 
 export const HistoryCost = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  gap: 0.25rem;
   width: 40%;
   height: 100%;
+  ${flexColumn};
+  justify-content: center;
+  gap: 0.25rem;
 
   p {
-    font-size: 1.3rem;
-    font-weight: 600;
+    font-size: ${({ theme }) => theme.fontsize.xxl};
+    font-weight: ${({ theme }) => theme.weight.lg};
     white-space: nowrap;
   }
 
   span {
-    font-size: 1rem;
+    font-size: ${({ theme }) => theme.fontsize.md};
     color: rgb(0, 0, 0, 0.5);
   }
 `;
@@ -75,30 +68,27 @@ const HistoryDate = styled.div`
   align-items: center;
 
   p {
-    font-size: 0.9rem;
-    font-weight: 600;
+    font-size: ${({ theme }) => theme.fontsize.sm};
+    font-weight: ${({ theme }) => theme.weight.lg};
     white-space: nowrap;
-    color: rgb(0, 0, 0, 0.4);
+    color: ${({ theme }) => theme.colors.dark};
   }
 `;
 
 const EditIcon = styled.div`
   width: 5%;
   height: 100%;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  font-size: 0.75rem;
+  ${flexCenter};
   cursor: pointer;
+
+  font-size: ${({ theme }) => theme.fontsize.xs};
 `;
 
 const HistoryItem = (props) => {
-  const isExpenses = props?.type == '지출';
-  const cost = isExpenses ? '-' + props?.cost : '+' + props?.cost;
   const [history, setHistory] = useRecoilState(historyAtom);
   const [openDelete, setOpenDelete] = useState(false);
+  const isExpenses = props?.type == '지출';
+  const cost = isExpenses ? '-' + props?.cost : '+' + props?.cost;
 
   const handleDelete = () => setOpenDelete((prev) => !prev);
 
