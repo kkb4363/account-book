@@ -3,19 +3,20 @@ import styled from 'styled-components';
 const ButtonWrapper = styled.button`
   width: ${({ $width }) => ($width ? $width : '5rem')};
   height: ${({ $height }) => ($height ? $height : '5rem')};
-  border-radius: 0.5rem;
-
   color: ${({ $color }) => ($color ? $color : 'white')};
-  font-weight: 600;
   font-size: ${({ $fontsize }) => ($fontsize ? $fontsize : '14px')};
-
+  background: ${({ $bgColor }) => ($bgColor ? $bgColor : '#3f3e3e')};
+  border: 1px solid ${({ $bgColor }) => ($bgColor ? $bgColor : 'inherit')};
+  font-weight: 600;
+  border-radius: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
-
-  background: ${({ $bgColor }) => ($bgColor ? $bgColor : '#3f3e3e')};
-
-  border: 1px solid ${({ $bgColor }) => ($bgColor ? $bgColor : 'inherit')};
+  white-space: nowrap;
+  cursor: pointer;
+  &:hover {
+    background: rgb(0, 0, 0, 0.6);
+  }
 `;
 
 const StyledButton = (props) => {

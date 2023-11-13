@@ -1,9 +1,12 @@
 import styled from 'styled-components';
-import { HistoryCost, HistoryIcon, HistoryIconWrapper } from './HistoryItem';
+import { HistoryIcon, HistoryIconWrapper } from './HistoryItem';
 import { useRef, useState } from 'react';
-import { useRecoilCallback, useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilCallback, useRecoilValue } from 'recoil';
 import { historyAtom } from '../../atoms/HistoryAtom';
 import { currentCategoryAtom } from '../../atoms/CategoryAtom';
+import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
+import Dropdown from '../common/Dropdown';
+import UseValidate from '../../hooks/UseValidate';
 
 const HistoryUpdateWrapper = styled.div`
   display: flex;
@@ -24,9 +27,66 @@ const HistoryUpdateWrapper = styled.div`
 const UpdateWrapper = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
   width: 100%;
   height: 60%;
+`;
+
+const UpdateInputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+`;
+
+const UpdateInput = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  p {
+    font-size: 1rem;
+    color: rgb(0, 0, 0, 0.5);
+  }
+`;
+
+const UpdateItemWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+
+  input {
+    border: 1px solid white;
+    width: 60%;
+    height: 50%;
+    background: rgb(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    color: black;
+
+    &::placeholder {
+      font-size: 1.25rem;
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+
+  span {
+    font-size: 1.25rem;
+    color: gray;
+  }
+`;
+
+const SetType = styled.div`
+  font-size: 1.25rem;
+  color: rgb(0, 0, 0, 0.5);
+  white-space: nowrap;
+  cursor: pointer;
+  position: relative;
 `;
 
 const ButtonWrapper = styled.div`
@@ -43,6 +103,9 @@ const ButtonWrapper = styled.div`
     align-items: center;
     box-shadow: 1px 1px 10px black;
     cursor: pointer;
+    &:hover {
+      opacity: 0.8;
+    }
   }
 
   div:first-child {
@@ -66,45 +129,30 @@ const ButtonWrapper = styled.div`
   }
 `;
 
-const UpdateCost = styled.div`
-  display: flex;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-
-  input {
-    border: 1px solid white;
-    width: 50%;
-    height: 30%;
-    background: lightgray;
-    border-radius: 0.5rem;
-    &:focus {
-      outline: none;
-    }
-  }
-
-  span {
-    font-size: 1.25rem;
-    color: gray;
-  }
-`;
-
 const HistoryUpdate = (props) => {
-  const history = useRecoilValue(historyAtom);
   const currentCategory = useRecoilValue(currentCategoryAtom);
-  const [update, setUpdate] = useState(false);
+  const history = useRecoilValue(historyAtom);
   const updateCostRef = useRef('');
+  const updateDetailRef = useRef('');
   const selectedHistory = history.filter((his) => his?.id == props.selectedId)[0];
   const isChangedIcon =
     selectedHistory?.category.icons != currentCategory.icons &&
     currentCategory.icons !== '';
-
-  const handleUpdate = () => setUpdate((prev) => !prev);
+  const [openType, setOpentype] = useState(false);
+  const [changedType, setChangedType] = useState(selectedHistory.type);
+  const onOpenType = () => {
+    setOpentype(true);
+  };
+  const handleType = (e) => {
+    setChangedType(e.currentTarget.name);
+    e.stopPropagation();
+    setOpentype(false);
+  };
   const onUpdateIcon = useRecoilCallback(({ snapshot, set }) => async () => {
     if (!isChangedIcon) return;
     const historySnapshot = await snapshot.getPromise(historyAtom);
     const updatedHistory = historySnapshot.map((prev) => {
-      if (prev.id == props.selectedId) {
+      if (prev?.id == props?.selectedId) {
         return {
           ...prev,
           category: {
@@ -121,20 +169,53 @@ const HistoryUpdate = (props) => {
     if (updateCostValue == '' || updateCostValue == undefined) return;
     const historySnapshot = await snapshot.getPromise(historyAtom);
     const updatedHistory = historySnapshot.map((prev) => {
-      if (prev.id == props.selectedId) {
+      if (prev?.id == props?.selectedId) {
         return {
           ...prev,
           cost: updateCostValue,
         };
-      }
+      } else return prev;
     });
     set(historyAtom, updatedHistory);
   });
+  const onUpdateDetail = useRecoilCallback(({ snapshot, set }) => async () => {
+    const updateDetailValue = updateDetailRef.current.value;
+    if (updateDetailValue == '' || updateDetailValue == undefined) return;
+    const historySnapshot = await snapshot.getPromise(historyAtom);
+    const updatedHistory = historySnapshot.map((prev) => {
+      if (prev?.id == props?.selectedId) {
+        return {
+          ...prev,
+          detail: updateDetailValue,
+        };
+      } else return prev;
+    });
+    set(historyAtom, updatedHistory);
+  });
+  const onUpdateType = useRecoilCallback(({ snapshot, set }) => async () => {
+    const isChangedType = selectedHistory.type != changedType;
+    if (!isChangedType) return;
+    const historySnapshot = await snapshot.getPromise(historyAtom);
+    const updatedHistory = historySnapshot.map((prev) => {
+      if (prev?.id == props?.selectedId) {
+        return {
+          ...prev,
+          type: changedType,
+        };
+      } else return prev;
+    });
+    set(historyAtom, updatedHistory);
+  });
+
   const onUpdate = useRecoilCallback(({ snapshot, set }) => async () => {
     await onUpdateCost();
     await onUpdateIcon();
+    await onUpdateDetail();
+    await onUpdateType();
     props.onClose();
   });
+
+  const { validateOnlyNumbers } = UseValidate();
 
   return (
     <HistoryUpdateWrapper>
@@ -150,16 +231,38 @@ const HistoryUpdate = (props) => {
           </span>
         </HistoryIconWrapper>
 
-        <HistoryCost>
-          {update ? (
-            <UpdateCost>
-              <input ref={updateCostRef} placeholder={selectedHistory?.cost} />
-              <span>원</span>
-            </UpdateCost>
+        <UpdateInputWrapper>
+          <UpdateInput>
+            <UpdateItemWrapper>
+              <input
+                onChange={validateOnlyNumbers}
+                type="number"
+                ref={updateCostRef}
+                placeholder={selectedHistory?.cost + '원'}
+              />
+            </UpdateItemWrapper>
+          </UpdateInput>
+
+          <UpdateInput>
+            <UpdateItemWrapper>
+              <input ref={updateDetailRef} placeholder={selectedHistory?.detail} />
+            </UpdateItemWrapper>
+          </UpdateInput>
+        </UpdateInputWrapper>
+
+        <SetType onClick={onOpenType}>
+          {changedType}
+          {openType ? (
+            <span>
+              <BsChevronUp />
+            </span>
           ) : (
-            <p onClick={handleUpdate}>{selectedHistory?.cost}원</p>
+            <span>
+              <BsChevronDown />
+            </span>
           )}
-        </HistoryCost>
+          {openType && <Dropdown onHandle={handleType} />}
+        </SetType>
       </UpdateWrapper>
 
       <ButtonWrapper>

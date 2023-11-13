@@ -1,78 +1,85 @@
-import { styled } from 'styled-components';
-import bgimage from '../images/bgimage.png';
-import StyledInput from '../components/input/StyledInput';
-import StyledButton from '../components/button/StyledButton';
-import { useRef } from 'react';
-import MotionInputs from '../components/motion/MotionInput';
-import MainInputs from '../components/main/MainInputs';
-import CategorySelect from '../components/category/CategorySelect';
+import React, { useRef } from 'react';
 import { useSetRecoilState } from 'recoil';
+import { styled } from 'styled-components';
 import { moneyAtom } from '../atoms/MoneyAtom';
-import { useNavigate } from 'react-router-dom';
+import StyledButton from '../components/button/StyledButton';
+import CategorySelect from '../components/category/CategorySelect';
 import CategoryUpdate from '../components/category/CategoryUpdate';
+import StyledInput from '../components/input/StyledInput';
+import MainInputs from '../components/main/AddHistory';
+import MotionInputs from '../components/motion/MotionInput';
 import UseHandler from '../hooks/UseHandler';
-const MainTitle = 'GABook';
-const MainSubTitle = 'Gibeom Account Book';
-const MainTextPaddingSize = '1rem';
+import bgimage from '../images/bg.png';
+import { GiHamburgerMenu } from 'react-icons/gi';
+import MenuNavbar from '../components/common/MenuNavbar';
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-`;
-
-const MainImage = styled.div`
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
   background-image: url(${bgimage});
   background-size: cover;
-  width: 100%;
-  height: 75vh;
-
-  position: relative;
-  box-sizing: border-box;
-  padding-left: ${MainTextPaddingSize};
 `;
 
 const MainText = styled.div`
   display: flex;
   flex-direction: column;
-
   color: white;
-  position: absolute;
-  bottom: ${MainTextPaddingSize};
+  margin-bottom: 0;
+  font-weight: 800;
   span:first-child {
-    font-size: 24px;
-    font-weight: 600;
+    font-size: 2rem;
     text-align: center;
   }
   span:last-child {
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 1.25rem;
   }
 `;
 
 const InputMoney = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: flex-end;
+  gap: 0.5rem;
   height: 7.5vh;
   width: 100%;
+
+  @media screen and (min-width: 1000px) {
+    width: 80%;
+  }
 `;
 
-const Details = styled.div`
-  display:flex;
-  justify-content:space-evenly;
-  align-items:center;
+export const Menubar = styled.div`
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
 
-  height:17.5vh;
-  width:100%:
+  &:hover {
+    color: lightgray;
+  }
 `;
+
+const mainText = [
+  {
+    title: 'GABook',
+  },
+  {
+    title: 'Gibeom Account Book',
+  },
+];
 
 const Main = () => {
-  const navigate = useNavigate();
-  const fields = ['addMoney', 'category', 'addCategory'];
-  const [open, closeAll, handleToggle] = UseHandler(fields);
-
   const inputref = useRef('');
   const setMoneyAtom = useSetRecoilState(moneyAtom);
+  const fields = ['addMoney', 'category', 'addCategory', 'menubar'];
+  const [open, closeAll, handleToggle] = UseHandler(fields);
+
   const setMoney = (e) => {
     e.preventDefault();
     setMoneyAtom(inputref.current.value);
@@ -81,60 +88,15 @@ const Main = () => {
     setMoneyAtom(inputref.current.value);
     handleToggle('addMoney');
   };
-  const detailsButtons = [
+
+  const opens = [
     {
-      text: '최근 내역',
-      name: 'current',
-      onClick: () => navigate('/history'),
+      condition: 'menubar',
+      data: <MenuNavbar onClose={() => handleToggle('menubar')} />,
     },
     {
-      text: '통계 확인',
-      name: 'status',
-      onClick: () => alert('개발 예정이에요 😅'),
-    },
-  ];
-
-  return (
-    <Wrapper>
-      <MainImage>
-        <MainText>
-          <span>{MainTitle}</span>
-          <span>{MainSubTitle}</span>
-        </MainText>
-      </MainImage>
-
-      <InputMoney>
-        <StyledInput
-          type="number"
-          placeholder={'금액을 입력해주세요'}
-          inputRef={inputref}
-          onSubmit={setMoney}
-        />
-        <StyledButton
-          onClick={setMoneyHandler}
-          width={'4.8rem'}
-          height={'2.5rem'}
-          fontsize="12px"
-        >
-          내역 추가
-        </StyledButton>
-      </InputMoney>
-
-      <Details>
-        {detailsButtons.map((btn, idx) => (
-          <StyledButton
-            key={idx}
-            width={'7rem'}
-            height={'3.5rem'}
-            fontsize={'16px'}
-            onClick={btn.onClick}
-          >
-            {btn.text}
-          </StyledButton>
-        ))}
-      </Details>
-
-      {open.addMoney && (
+      condition: 'addMoney',
+      data: (
         <MotionInputs onClose={closeAll}>
           <MainInputs
             onClose={() => handleToggle('addMoney')}
@@ -142,21 +104,57 @@ const Main = () => {
             onSubmit={setMoney}
           />
         </MotionInputs>
-      )}
-
-      {open.category && (
+      ),
+    },
+    {
+      condition: 'category',
+      data: (
         <MotionInputs onClose={closeAll}>
           <CategorySelect
             onCategory={() => handleToggle('category')}
             onAddCate={() => handleToggle('addCategory')}
           />
         </MotionInputs>
-      )}
-
-      {open.addCategory && (
+      ),
+    },
+    {
+      condition: 'addCategory',
+      data: (
         <MotionInputs height="70vh" onClose={closeAll}>
           <CategoryUpdate onAddCate={() => handleToggle('addCategory')} />
         </MotionInputs>
+      ),
+    },
+  ];
+
+  return (
+    <Wrapper>
+      <MainText>
+        {mainText.map((item, idx) => (
+          <span key={'maintextkey=' + idx}>{item.title}</span>
+        ))}
+      </MainText>
+
+      <InputMoney>
+        <StyledButton
+          onClick={setMoneyHandler}
+          width={'5.5rem'}
+          height={'2.5rem'}
+          fontsize="1rem"
+        >
+          내역 추가
+        </StyledButton>
+      </InputMoney>
+
+      <Menubar onClick={() => handleToggle('menubar')}>
+        <GiHamburgerMenu />
+      </Menubar>
+
+      {opens.map(
+        (item, idx) =>
+          open[item.condition] && (
+            <React.Fragment key={'opendataskey' + idx}>{item.data}</React.Fragment>
+          )
       )}
     </Wrapper>
   );

@@ -1,16 +1,16 @@
-import { keyframes, styled } from 'styled-components';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
-import HistoryItem from '../components/history/HistoryItem';
-import { historyAtom } from '../atoms/HistoryAtom';
-import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import MotionInputs from '../components/motion/MotionInput';
-import HistoryUpdate from '../components/history/HistoryUpdate';
-import UseHandler from '../hooks/UseHandler';
+import { AiOutlineLeft, AiOutlineRight } from 'react-icons/ai';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { keyframes, styled } from 'styled-components';
+import { currentCategoryAtom } from '../atoms/CategoryAtom';
+import { historyAtom } from '../atoms/HistoryAtom';
 import CategorySelect from '../components/category/CategorySelect';
 import CategoryUpdate from '../components/category/CategoryUpdate';
-import { currentCategoryAtom } from '../atoms/CategoryAtom';
+import HistoryItem from '../components/history/HistoryItem';
+import HistoryUpdate from '../components/history/HistoryUpdate';
+import MotionInputs from '../components/motion/MotionInput';
+import UseHandler from '../hooks/UseHandler';
 
 const HistoryKeyframes = keyframes`
   from{
@@ -53,15 +53,24 @@ const HeaderDate = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-
   width: 100%;
-  height: 30%;
-
+  height: 25%;
   color: lightgray;
+
   font-size: 2rem;
   font-weight: 600;
   span:nth-child(3) {
     color: black;
+  }
+
+  span:nth-child(2),
+  span:nth-child(4) {
+    cursor: pointer;
+  }
+
+  @media screen and (min-width: 1000px) {
+    margin: 0 auto;
+    width: 50%;
   }
 `;
 
@@ -69,17 +78,17 @@ const HeaderTotal = styled.div`
   display: flex;
   flex-direction: column;
   width: 40%;
-  height: 30%;
+  height: 35%;
   gap: 0.45rem;
 
   font-size: 14px;
   font-weight: 600;
   span:first-child {
     color: gray;
-    font-size: 16px;
+    font-size: 1rem;
   }
-  span:nth-child(2) {
-    color: black;
+  span:nth-child(3) {
+    color: #ff3333;
   }
   span:last-child {
     color: #0075ff;
@@ -89,15 +98,15 @@ const HeaderTotal = styled.div`
 const CurrentHistory = styled.div`
   width: 100%;
   height: 50%;
-
   box-sizing: border-box;
   padding: 2rem;
-
   display: flex;
   flex-direction: column;
   gap: 1rem;
-
   overflow: scroll;
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const CurrentText = styled.span`
@@ -116,17 +125,21 @@ const History = () => {
   const setCurrentCategory = useSetRecoilState(currentCategoryAtom);
   const navigate = useNavigate();
   const date = new Date();
+  const fields = ['category', 'addCategory'];
+  const [open, closeAll, handleToggle] = UseHandler(fields);
+
   const [edit, setEdit] = useState({
     open: false,
     id: '',
   });
-  const fields = ['category', 'addCategory'];
-  const [open, closeAll, handleToggle] = UseHandler(fields);
 
   const [current, setCurrent] = useState({
     month: date.getMonth() + 1,
     year: date.getFullYear(),
   });
+  const prevMonth = current.month - 1 == 0 ? 12 : current.month - 1;
+  const nextMonth = current.month + 1 == 13 ? 1 : current.month + 1;
+  const currentDate = current.year + '' + current.month;
 
   const onPrevMonth = () => {
     const prevmon = current.month - 1 == 0 ? 12 : current.month - 1;
@@ -157,29 +170,61 @@ const History = () => {
       text: '',
     });
   };
-
   const openCategory = () => handleToggle('category');
 
-  const prevMonth = current.month - 1 == 0 ? 12 : current.month - 1;
-  const nextMonth = current.month + 1 == 13 ? 1 : current.month + 1;
-  const currentDate = current.year + '' + current.month;
-
-  const validDatas = history?.filter((item) => {
+  const currentMonthDatas = history?.filter((item) => {
     const checkValue = item?.date?.slice(0, 4) + item?.date?.slice(5, 7);
     return checkValue == currentDate;
   });
 
-  const expenses = validDatas?.reduce((acc, cur) => {
-    const isMinus = Number(cur.cost) < 0;
-    if (isMinus) acc -= Number(cur.cost);
+  const expenses = currentMonthDatas?.reduce((acc, cur) => {
+    const isExpenses = cur.type == '지출';
+    if (isExpenses) acc += Number(cur.cost);
     return acc;
   }, 0);
 
-  const income = validDatas?.reduce((acc, cur) => {
-    const isMinus = Number(cur.cost) < 0;
-    if (!isMinus) acc += Number(cur.cost);
+  const income = currentMonthDatas?.reduce((acc, cur) => {
+    const isIncome = cur.type == '수입';
+    if (isIncome) acc += Number(cur.cost);
     return acc;
   }, 0);
+
+  const groupedData = currentMonthDatas.reduce((groups, item) => {
+    const date = new Date(item.date);
+    const day = date.getDate();
+    if (!groups[day]) {
+      groups[day] = [];
+    }
+    groups[day].push(item);
+
+    return groups;
+  }, {});
+
+  const groupedDataArray = Object.entries(groupedData).map(([day, dayData]) => ({
+    day: day,
+    data: dayData,
+  }));
+
+  const result = groupedDataArray
+    .slice()
+    .reverse()
+    .map(({ day, data }) => (
+      <>
+        <span style={{ fontSize: '1rem', color: 'rgb(0,0,0,0.7)' }}>{day}일</span>
+        {data.map((his, idx) => (
+          <HistoryItem
+            key={idx}
+            date={his.date}
+            cost={his.cost}
+            cate={his.category}
+            detail={his.detail}
+            type={his.type}
+            id={his.id}
+            onEdit={openEditHandler}
+          />
+        ))}
+      </>
+    ));
 
   return (
     <HistoryWrapper>
@@ -202,23 +247,14 @@ const History = () => {
 
         <HeaderTotal>
           <span>{current.month}월 내 소비</span>
-          <span>{'- ' + expenses}원</span>
           <span>{'+ ' + income}원</span>
+          <span>{'- ' + expenses}원</span>
+          <span>합계 : {income - expenses}원</span>
         </HeaderTotal>
       </HistoryHeader>
+
       <CurrentText>최근 내역</CurrentText>
-      <CurrentHistory>
-        {validDatas?.map((his, idx) => (
-          <HistoryItem
-            key={idx}
-            date={his.date}
-            cost={his.cost}
-            cate={his.category}
-            id={his.id}
-            onEdit={openEditHandler}
-          />
-        ))}
-      </CurrentHistory>
+      <CurrentHistory>{result}</CurrentHistory>
 
       {edit.open && (
         <MotionInputs height="30vh" onClose={closeEditHandler}>

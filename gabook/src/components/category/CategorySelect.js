@@ -9,16 +9,16 @@ const CategorySelectWrapper = styled.div`
 
   display: flex;
   flex-direction: column;
+
   box-sizing: border-box;
   padding: 1.25rem;
 `;
 
 const PrevWrapper = styled.div`
-  width: 10%;
-  height: 10%;
-  margin-left: -0.5rem;
-
-  margin-bottom: 1rem;
+  width: 5%;
+  height: 20%;
+  cursor: pointer;
+  margin-bottom: 2rem;
 `;
 
 const CategorySelectHeader = styled.div`
@@ -28,6 +28,8 @@ const CategorySelectHeader = styled.div`
 
   width: 100%;
   height: 20%;
+  box-sizing: border-box;
+  padding-bottom: 3rem;
 `;
 
 const HeaderTitle = styled.div`
@@ -42,8 +44,8 @@ const HeaderTitle = styled.div`
     font-size: 18px;
   }
   span:last-child {
-    font-size: 12px;
-    color: lightgray;
+    font-size: 14px;
+    color: rgb(0, 0, 0, 0.3);
   }
 `;
 
@@ -52,16 +54,12 @@ const HeaderUpdateCategory = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  width: 25%;
+  width: 10%;
   height: 100%;
-  font-weight: 600;
 
-  span:first-child {
+  span {
     font-size: 18px;
-  }
-  span:last-child {
-    font-size: 12px;
-    color: lightgray;
+    font-weight: 600;
   }
 `;
 const CategorySelect = (props) => {
@@ -78,10 +76,9 @@ const CategorySelect = (props) => {
         </HeaderTitle>
 
         <HeaderUpdateCategory>
-          <span onClick={props.onAddCate}>
+          <span style={{ cursor: 'pointer' }} onClick={props.onAddCate}>
             <MdModeEditOutline />
           </span>
-          <span>카테고리 수정</span>
         </HeaderUpdateCategory>
       </CategorySelectHeader>
 

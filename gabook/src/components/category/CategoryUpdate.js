@@ -1,15 +1,14 @@
-import styled from 'styled-components';
-import PrevIcon from '../common/PrevIcon';
 import EmojiPicker from 'emoji-picker-react';
-import StyledInput from '../input/StyledInput';
-import StyledButton from '../button/StyledButton';
 import { useRef, useState } from 'react';
-import Overlay from '../common/Overlay';
-import CategoryView from './CategoryView';
 import { useSetRecoilState } from 'recoil';
+import styled from 'styled-components';
 import { currentCategoriesAtom } from '../../atoms/CategoryAtom';
+import StyledButton from '../button/StyledButton';
 import ErrorInform from '../common/ErrorInform';
-import DeleteConfirm from '../common/DeleteConfirm';
+import Overlay from '../common/Overlay';
+import PrevIcon from '../common/PrevIcon';
+import StyledInput from '../input/StyledInput';
+import CategoryView from './CategoryView';
 
 const CategoryUpdateWrapper = styled.div`
   display: flex;
@@ -26,14 +25,17 @@ const PrevWrapper = styled.div`
   height: 10%;
 
   margin-left: -0.5rem;
-
-  margin-bottom: 1rem;
+  margin-top: -0.5rem;
+  cursor: pointer;
+  @media screen and (min-width: 1000px) {
+    margin-left: -4rem;
+  }
 `;
 
 const HeaderTitle = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.25rem;
   width: 65%;
   height: 10%;
 
@@ -50,9 +52,15 @@ const HeaderTitle = styled.div`
 const AddCategoryInput = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: flex-start;
 
   width: 100%;
   height: 10%;
+
+  @media screen and (min-width: 1000px) {
+    justify-content: flex-start;
+    gap: 0.5rem;
+  }
 `;
 
 const SetIcon = styled.div`
@@ -76,10 +84,13 @@ const EmojipickerWrapper = styled.div`
 
 const PrevCategoryTitle = styled.div`
   width: 60%;
-  height: 5%;
+  height: 10%;
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 0.425rem;
 
   span {
-    font-size: 18px;
+    font-size: 1.1rem;
     font-weight: 600;
   }
 `;
@@ -145,9 +156,10 @@ const CategoryUpdate = (props) => {
           width="12rem"
           placeholder="이름을 입력해주세요"
           inputRef={newCategoryNameRef}
+          borderStyle="1px solid lightgray"
           onBlur={handleNameError}
         />
-        <StyledButton onClick={onAddCategory} height="80%">
+        <StyledButton onClick={onAddCategory} height="2.5rem">
           추가하기
         </StyledButton>
       </AddCategoryInput>
