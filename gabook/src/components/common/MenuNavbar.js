@@ -1,7 +1,7 @@
-import { useNavigate } from 'react-router-dom';
-import styled, { keyframes } from 'styled-components';
-import Overlay from './Overlay';
-import { flexColumn } from '../../styled/styled';
+import { useNavigate } from "react-router-dom";
+import styled, { keyframes } from "styled-components";
+import Overlay from "./Overlay";
+import { flexColumn } from "../../styled/styled";
 
 const menunavbar_keyframes = keyframes`
     from{
@@ -14,7 +14,7 @@ const menunavbar_keyframes = keyframes`
     }
 `;
 
-const MenuNavbarWrapper = styled.div`
+const MenuNavbarLayout = styled.div`
   width: 30%;
   height: 100vh;
   position: absolute;
@@ -24,6 +24,8 @@ const MenuNavbarWrapper = styled.div`
   ${flexColumn};
   align-items: center;
   animation: ${menunavbar_keyframes} 0.5s ease-in-out;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
 `;
 
 const MenuNavbarItem = styled.div`
@@ -34,10 +36,10 @@ const MenuNavbarItem = styled.div`
 
   font-size: ${({ theme }) => theme.fontsize.xl};
   font-weight: ${({ theme }) => theme.weight.xxl};
-  color: rgb(0, 0, 0, 0.5);
+  color: rgb(0, 0, 0, 0.8);
 
   &:hover {
-    color: rgb(0, 0, 0, 0.1);
+    color: rgb(0, 0, 0, 0.5);
   }
 `;
 
@@ -46,23 +48,23 @@ const MenuNavbar = (props) => {
 
   const navItems = [
     {
-      text: 'History',
-      onclick: () => navi('/history'),
+      text: "History",
+      onclick: () => navi("/history"),
     },
     {
-      text: 'Statistics',
-      onclick: () => alert('개발 예정🧑🏼‍💻'),
+      text: "Statistics",
+      onclick: () => alert("개발 예정🧑🏼‍💻"),
     },
   ];
   return (
     <>
-      <MenuNavbarWrapper>
+      <MenuNavbarLayout>
         {navItems.map((item, idx) => (
-          <MenuNavbarItem onClick={item.onclick} key={'menunavbarkey=' + idx}>
+          <MenuNavbarItem onClick={item.onclick} key={"menunavbarkey=" + idx}>
             {item.text}
           </MenuNavbarItem>
         ))}
-      </MenuNavbarWrapper>
+      </MenuNavbarLayout>
       <Overlay onClose={props.onClose} />
     </>
   );

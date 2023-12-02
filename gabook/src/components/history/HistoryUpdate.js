@@ -1,13 +1,13 @@
-import { useRef, useState } from 'react';
-import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
-import { useRecoilCallback, useRecoilValue } from 'recoil';
-import styled from 'styled-components';
-import { currentCategoryAtom } from '../../atoms/CategoryAtom';
-import { historyAtom } from '../../atoms/HistoryAtom';
-import UseValidate from '../../hooks/UseValidate';
-import Dropdown from '../common/Dropdown';
-import { HistoryIcon, HistoryIconWrapper } from './HistoryItem';
-import { flexCenter, flexColumn, fullSize } from '../../styled/styled';
+import { useRef, useState } from "react";
+import { BsChevronDown, BsChevronUp } from "react-icons/bs";
+import { useRecoilCallback, useRecoilValue } from "recoil";
+import styled from "styled-components";
+import { currentCategoryAtom } from "../../atoms/CategoryAtom";
+import { historyAtom } from "../../atoms/HistoryAtom";
+import useValidate from "../../hooks/useValidate";
+import Dropdown from "../common/Dropdown";
+import { HistoryIcon, HistoryIconWrapper } from "./HistoryItem";
+import { flexCenter, flexColumn, fullSize } from "../../styled/styled";
 
 const HistoryUpdateWrapper = styled.div`
   ${flexColumn};
@@ -124,11 +124,11 @@ const HistoryUpdate = (props) => {
   const selectedHistory = history.filter((his) => his?.id == props.selectedId)[0];
   const isChangedIcon =
     selectedHistory?.category.icons != currentCategory.icons &&
-    currentCategory.icons !== '';
+    currentCategory.icons !== "";
   const [changedType, setChangedType] = useState(selectedHistory.type);
   const [openType, setOpentype] = useState(false);
-  const updateCostRef = useRef('');
-  const updateDetailRef = useRef('');
+  const updateCostRef = useRef("");
+  const updateDetailRef = useRef("");
 
   const onOpenType = () => {
     setOpentype(true);
@@ -156,7 +156,7 @@ const HistoryUpdate = (props) => {
   });
   const onUpdateCost = useRecoilCallback(({ snapshot, set }) => async () => {
     const updateCostValue = updateCostRef.current.value;
-    if (updateCostValue == '' || updateCostValue == undefined) return;
+    if (updateCostValue == "" || updateCostValue == undefined) return;
     const historySnapshot = await snapshot.getPromise(historyAtom);
     const updatedHistory = historySnapshot.map((prev) => {
       if (prev?.id == props?.selectedId) {
@@ -170,7 +170,7 @@ const HistoryUpdate = (props) => {
   });
   const onUpdateDetail = useRecoilCallback(({ snapshot, set }) => async () => {
     const updateDetailValue = updateDetailRef.current.value;
-    if (updateDetailValue == '' || updateDetailValue == undefined) return;
+    if (updateDetailValue == "" || updateDetailValue == undefined) return;
     const historySnapshot = await snapshot.getPromise(historyAtom);
     const updatedHistory = historySnapshot.map((prev) => {
       if (prev?.id == props?.selectedId) {
@@ -205,7 +205,7 @@ const HistoryUpdate = (props) => {
     props.onClose();
   });
 
-  const { validateOnlyNumbers } = UseValidate();
+  const { validateOnlyNumbers } = useValidate();
 
   return (
     <HistoryUpdateWrapper>
@@ -228,7 +228,7 @@ const HistoryUpdate = (props) => {
                 onChange={validateOnlyNumbers}
                 type="number"
                 ref={updateCostRef}
-                placeholder={selectedHistory?.cost + '원'}
+                placeholder={selectedHistory?.cost + "원"}
               />
             </UpdateItemWrapper>
           </UpdateInput>

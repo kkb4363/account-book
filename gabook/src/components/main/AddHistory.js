@@ -1,15 +1,14 @@
-import { useRef, useState } from 'react';
-import { BsChevronDown, BsChevronUp } from 'react-icons/bs';
-import { useNavigate } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
-import styled from 'styled-components';
-import { currentCategoryAtom } from '../../atoms/CategoryAtom';
-import { historyAtom } from '../../atoms/HistoryAtom';
-import UseValidate from '../../hooks/UseValidate';
-import { flexColumn, fullSize } from '../../styled/styled';
-import StyledButton from '../button/StyledButton';
-import Dropdown from '../common/Dropdown';
-import StyledInput from '../input/StyledInput';
+import { useRef, useState } from "react";
+import { BsChevronDown } from "react-icons/bs";
+import { useNavigate } from "react-router-dom";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import styled from "styled-components";
+import { currentCategoryAtom } from "../../atoms/CategoryAtom";
+import { historyAtom } from "../../atoms/HistoryAtom";
+import { flexColumn, fullSize } from "../../styled/styled";
+import MoneyInput from "../addInputs/MoneyInput";
+import StyledButton from "../button/StyledButton";
+import StyledInput from "../input/StyledInput";
 
 const MainInputsWrapper = styled.div`
   ${fullSize};
@@ -53,6 +52,22 @@ const InputWrapper = styled.div`
     font-size: ${({ theme }) => theme.fontsize.xl};
     font-weight: ${({ theme }) => theme.weight.lg};
   }
+
+  input {
+    &:before {
+      content: attr(placeholder);
+      color: lightgray;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 10px;
+      pointer-events: none;
+    }
+
+    &:not(:placeholder-shown):before {
+      display: none;
+    }
+  }
 `;
 
 const CurrentCateogry = styled.div`
@@ -81,16 +96,14 @@ const MainInputsBtnWrapper = styled.div`
 const AddHistory = (props) => {
   const currentCategory = useRecoilValue(currentCategoryAtom);
   const setHistory = useSetRecoilState(historyAtom);
-  const [openType, setOpenType] = useState(false);
-  const [selectedType, setSelectedType] = useState('지출');
-  const { validateOnlyNumbers } = UseValidate();
-  const selectedDateRef = useRef('');
-  const detailRef = useRef('');
-  const moneyRef = useRef('');
+  const [type, setType] = useState("지출");
+  const selectedDateRef = useRef("");
+  const detailRef = useRef("");
+  const moneyRef = useRef("");
   const navi = useNavigate();
 
   const onAddHistory = async () => {
-    if (selectedDateRef?.current?.value == '' || moneyRef.current.value == '') return;
+    if (selectedDateRef?.current?.value == "" || moneyRef.current.value == "") return;
     setHistory((prev) => [
       ...prev,
       {
@@ -99,25 +112,16 @@ const AddHistory = (props) => {
         cost: moneyRef.current.value,
         detail: detailRef.current.value,
         id: Math.random(),
-        type: selectedType,
+        type: type,
       },
     ]);
     props.onClose();
-    navi('/history');
-  };
-
-  const openTypeHandler = () => {
-    setOpenType((prev) => !prev);
-  };
-
-  const handleType = (e) => {
-    setSelectedType(e.currentTarget.name);
-    openTypeHandler();
+    navi("/history");
   };
 
   const showCurrentCategory = [
     {
-      condition: currentCategory.text != '',
+      condition: currentCategory.text != "",
       data: (
         <>
           <div>{currentCategory.icons}</div>
@@ -126,12 +130,15 @@ const AddHistory = (props) => {
       ),
     },
     {
-      condition: currentCategory.text == '',
+      condition: currentCategory.text == "",
       data: <p>카테고리를 설정해주세요</p>,
     },
   ];
 
   const inputItems = [
+    {
+      item: <MoneyInput moneyRef={moneyRef} type={type} setType={setType} />,
+    },
     {
       item: (
         <>
@@ -149,34 +156,7 @@ const AddHistory = (props) => {
       item: (
         <>
           <StyledInput
-            outline={'none'}
-            fontsize="18px"
-            type="number"
-            placeholder={'금액을 입력해주세요'}
-            inputRef={moneyRef}
-            onChange={validateOnlyNumbers}
-          />
-          <span onClick={openTypeHandler}>
-            {selectedType}{' '}
-            {openType ? (
-              <div>
-                <BsChevronUp />
-              </div>
-            ) : (
-              <div>
-                <BsChevronDown />
-              </div>
-            )}
-          </span>
-          {openType && <Dropdown onHandle={handleType} />}
-        </>
-      ),
-    },
-    {
-      item: (
-        <>
-          <StyledInput
-            outline={'none'}
+            outline={"none"}
             fontsize="18px"
             type="text"
             width="80vw"
@@ -190,7 +170,7 @@ const AddHistory = (props) => {
     {
       item: (
         <StyledInput
-          outline={'none'}
+          outline={"none"}
           fontsize="18px"
           width="95%"
           type="date"
@@ -208,7 +188,7 @@ const AddHistory = (props) => {
       </MainInputsTitle>
 
       {inputItems.map((item, idx) => (
-        <InputWrapper key={'inputwrapperkey' + idx}>{item.item}</InputWrapper>
+        <InputWrapper key={"inputwrapperkey" + idx}>{item.item}</InputWrapper>
       ))}
 
       <MainInputsBtnWrapper>

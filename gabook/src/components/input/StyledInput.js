@@ -1,19 +1,19 @@
-import styled from 'styled-components';
+import styled from "styled-components";
 
 const InputWrapper = styled.input`
-  width: ${({ $width }) => ($width ? $width : '18rem')};
-  height: ${({ $height }) => ($height ? $height : '2.5rem')};
+  width: ${({ $width }) => ($width ? $width : "18rem")};
+  height: ${({ $height }) => ($height ? $height : "2.5rem")};
   box-sizing: border-box;
   padding-left: 1rem;
   background: white;
-  border: ${({ $borderStyle }) => ($borderStyle ? $borderStyle : 'none;')};
+  border: ${({ $borderStyle }) => ($borderStyle ? $borderStyle : "none;")};
   border-radius: 0.5rem;
 
-  font-size: ${({ $fontsize }) => ($fontsize ? $fontsize : '14px')};
+  font-size: ${({ $fontsize }) => ($fontsize ? $fontsize : "14px")};
   white-space: nowrap;
 
   &:focus {
-    outline: ${({ $outline }) => ($outline ? $outline : '1px solid lightgray')};
+    outline: ${({ $outline }) => ($outline ? $outline : "1px solid lightgray")};
   }
 
   &::placeholder {
@@ -31,12 +31,14 @@ const StyledInput = (props) => {
         $outline={props.outline}
         $borderStyle={props.borderStyle}
         ref={props.inputRef}
+        value={props.value}
         placeholder={props.placeholder}
         type={props.type}
         onBlur={props.onBlur}
         onChange={props.onChange}
-        max={'2050-05-05'}
-        min={'2023-05-05'}
+        step={props.step}
+        max={"2050-05-05"}
+        min={"2023-05-05"}
       />
     </form>
   );

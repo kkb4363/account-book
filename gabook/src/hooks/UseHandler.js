@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-const UseHandler = (initial) => {
+export default function useHandler(initial) {
   const initialState = Object.fromEntries(initial.map((field) => [field, false]));
   const [open, setOpen] = useState(initialState);
 
@@ -14,6 +14,4 @@ const UseHandler = (initial) => {
     }));
 
   return [open, closeAll, handleToggle];
-};
-
-export default UseHandler;
+}

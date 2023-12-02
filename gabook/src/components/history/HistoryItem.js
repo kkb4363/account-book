@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { AiFillDelete } from 'react-icons/ai';
-import { GiHamburgerMenu } from 'react-icons/gi';
-import { useRecoilState } from 'recoil';
-import styled from 'styled-components';
-import { historyAtom } from '../../atoms/HistoryAtom';
-import { flexCenter, flexColumn } from '../../styled/styled';
-import DeleteConfirm from '../common/DeleteConfirm';
+import { useState } from "react";
+import { AiFillDelete } from "react-icons/ai";
+import { GiHamburgerMenu } from "react-icons/gi";
+import { useRecoilState } from "recoil";
+import styled from "styled-components";
+import { historyAtom } from "../../atoms/HistoryAtom";
+import { flexCenter, flexColumn } from "../../styled/styled";
+import DeleteConfirm from "../common/DeleteConfirm";
 
 const HistoryItemWrapper = styled.div`
   width: 100%;
@@ -50,6 +50,8 @@ export const HistoryCost = styled.div`
   gap: 0.25rem;
 
   p {
+    color: ${(props) =>
+      props.$isExpenses ? props.theme.colors.error : props.theme.colors.blue};
     font-size: ${({ theme }) => theme.fontsize.xxl};
     font-weight: ${({ theme }) => theme.weight.lg};
     white-space: nowrap;
@@ -87,8 +89,8 @@ const EditIcon = styled.div`
 const HistoryItem = (props) => {
   const [history, setHistory] = useRecoilState(historyAtom);
   const [openDelete, setOpenDelete] = useState(false);
-  const isExpenses = props?.type == '지출';
-  const cost = isExpenses ? '-' + props?.cost : '+' + props?.cost;
+  const isExpenses = props?.type == "지출";
+  const cost = isExpenses ? "-" + props?.cost : "+" + props?.cost;
 
   const handleDelete = () => setOpenDelete((prev) => !prev);
 
@@ -104,7 +106,7 @@ const HistoryItem = (props) => {
         <span>{props.cate?.text}</span>
       </HistoryIconWrapper>
 
-      <HistoryCost>
+      <HistoryCost $isExpenses={isExpenses}>
         <p>{cost}원</p>
         <span>{props?.detail}</span>
       </HistoryCost>
@@ -117,7 +119,7 @@ const HistoryItem = (props) => {
         <GiHamburgerMenu />
       </EditIcon>
 
-      <AiFillDelete style={{ cursor: 'pointer' }} onClick={handleDelete} />
+      <AiFillDelete style={{ cursor: "pointer" }} onClick={handleDelete} />
 
       {openDelete && (
         <DeleteConfirm
