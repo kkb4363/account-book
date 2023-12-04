@@ -1,15 +1,15 @@
-import EmojiPicker from 'emoji-picker-react';
-import { useRef, useState } from 'react';
-import { useSetRecoilState } from 'recoil';
-import styled from 'styled-components';
-import { currentCategoriesAtom } from '../../atoms/CategoryAtom';
-import StyledButton from '../button/StyledButton';
-import ErrorInform from '../common/ErrorInform';
-import Overlay from '../common/Overlay';
-import PrevIcon from '../common/PrevIcon';
-import StyledInput from '../input/StyledInput';
-import CategoryView from './CategoryView';
-import { flexCenter, flexColumn, fullSize } from '../../styled/styled';
+import EmojiPicker from "emoji-picker-react";
+import { useRef, useState } from "react";
+import { useSetRecoilState } from "recoil";
+import styled from "styled-components";
+import { currentCategoriesAtom } from "../../atoms/CategoryAtom";
+import StyledButton from "../button/StyledButton";
+import ErrorInform from "../common/ErrorInform";
+import Overlay from "../common/Overlay";
+import PrevIcon from "../common/PrevIcon";
+import StyledInput from "../input/StyledInput";
+import CategoryView from "./CategoryView";
+import { flexCenter, flexColumn, fullSize } from "../../styled/styled";
 
 const CategoryUpdateWrapper = styled.div`
   ${fullSize};
@@ -20,8 +20,8 @@ const CategoryUpdateWrapper = styled.div`
 
 const PrevWrapper = styled.div`
   width: 10%;
-  height: 10%;
-  margin-left: -0.5rem;
+  height: 8%;
+  margin-left: -0.75rem;
   margin-top: -0.5rem;
   cursor: pointer;
 
@@ -97,8 +97,8 @@ const CategoryUpdate = (props) => {
   const addCategory = useSetRecoilState(currentCategoriesAtom);
   const [emojiOpen, setEmojiOpen] = useState(false);
   const [nameError, setNameError] = useState(false);
-  const [icon, setIcon] = useState('😀');
-  const newCategoryNameRef = useRef('');
+  const [icon, setIcon] = useState("😀");
+  const newCategoryNameRef = useRef("");
 
   const emojiHandler = () => {
     setEmojiOpen((prev) => !prev);
@@ -108,7 +108,7 @@ const CategoryUpdate = (props) => {
     emojiHandler();
   };
   const onAddCategory = () => {
-    if (newCategoryNameRef.current.value == '') {
+    if (newCategoryNameRef.current.value == "") {
       setNameError(true);
       return;
     }
@@ -119,11 +119,11 @@ const CategoryUpdate = (props) => {
         text: newCategoryNameRef.current.value,
       },
     ]);
-    newCategoryNameRef.current.value = '';
+    newCategoryNameRef.current.value = "";
   };
   const handleNameError = () => {
     const newCategoryNameValue = newCategoryNameRef.current.value;
-    if (newCategoryNameValue == '' || newCategoryNameValue == undefined)
+    if (newCategoryNameValue == "" || newCategoryNameValue == undefined)
       setNameError(true);
     else setNameError(false);
   };

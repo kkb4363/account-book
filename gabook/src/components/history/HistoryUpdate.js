@@ -5,11 +5,150 @@ import styled from "styled-components";
 import { currentCategoryAtom } from "../../atoms/CategoryAtom";
 import { historyAtom } from "../../atoms/HistoryAtom";
 import useValidate from "../../hooks/useValidate";
+import { flexCenter, flexColumn, fullSize } from "../../styled/styled";
 import Dropdown from "../common/Dropdown";
 import { HistoryIcon, HistoryIconWrapper } from "./HistoryItem";
-import { flexCenter, flexColumn, fullSize } from "../../styled/styled";
 
-const HistoryUpdateWrapper = styled.div`
+const HistoryUpdate = (props) => {
+  const currentCategory = useRecoilValue(currentCategoryAtom);
+  const history = useRecoilValue(historyAtom);
+  const selectedHistory = history.filter((his) => his?.id == props.selectedId)[0];
+  const isChangedIcon =
+    selectedHistory?.category.icons != currentCategory.icons &&
+    currentCategory.icons !== "";
+  const [changedType, setChangedType] = useState(selectedHistory.type);
+  const [openType, setOpentype] = useState(false);
+  const updateCostRef = useRef("");
+  const updateDetailRef = useRef("");
+
+  const onOpenType = () => {
+    setOpentype(true);
+  };
+  const handleType = (e) => {
+    setChangedType(e.currentTarget.name);
+    e.stopPropagation();
+    setOpentype(false);
+  };
+  const onUpdateIcon = useRecoilCallback(({ snapshot, set }) => async () => {
+    if (!isChangedIcon) return;
+    const historySnapshot = await snapshot.getPromise(historyAtom);
+    const updatedHistory = historySnapshot.map((prev) => {
+      if (prev?.id == props?.selectedId) {
+        return {
+          ...prev,
+          category: {
+            icons: currentCategory.icons,
+            text: currentCategory.text,
+          },
+        };
+      } else return prev;
+    });
+    set(historyAtom, updatedHistory);
+  });
+  const onUpdateCost = useRecoilCallback(({ snapshot, set }) => async () => {
+    const updateCostValue = updateCostRef.current.value;
+    if (updateCostValue == "" || updateCostValue == undefined) return;
+    const historySnapshot = await snapshot.getPromise(historyAtom);
+    const updatedHistory = historySnapshot.map((prev) => {
+      if (prev?.id == props?.selectedId) {
+        return {
+          ...prev,
+          cost: updateCostValue,
+        };
+      } else return prev;
+    });
+    set(historyAtom, updatedHistory);
+  });
+  const onUpdateDetail = useRecoilCallback(({ snapshot, set }) => async () => {
+    const updateDetailValue = updateDetailRef.current.value;
+    if (updateDetailValue == "" || updateDetailValue == undefined) return;
+    const historySnapshot = await snapshot.getPromise(historyAtom);
+    const updatedHistory = historySnapshot.map((prev) => {
+      if (prev?.id == props?.selectedId) {
+        return {
+          ...prev,
+          detail: updateDetailValue,
+        };
+      } else return prev;
+    });
+    set(historyAtom, updatedHistory);
+  });
+  const onUpdateType = useRecoilCallback(({ snapshot, set }) => async () => {
+    const isChangedType = selectedHistory.type != changedType;
+    if (!isChangedType) return;
+    const historySnapshot = await snapshot.getPromise(historyAtom);
+    const updatedHistory = historySnapshot.map((prev) => {
+      if (prev?.id == props?.selectedId) {
+        return {
+          ...prev,
+          type: changedType,
+        };
+      } else return prev;
+    });
+    set(historyAtom, updatedHistory);
+  });
+
+  const onUpdate = useRecoilCallback(({ snapshot, set }) => async () => {
+    await onUpdateCost();
+    await onUpdateIcon();
+    await onUpdateDetail();
+    await onUpdateType();
+    props.onClose();
+  });
+
+  const { validateOnlyNumbers } = useValidate();
+
+  return (
+    <HistoryUpdateLayout>
+      <span>수정</span>
+
+      <UpdateWrapper>
+        <HistoryIconWrapper onClick={props.onCate}>
+          <HistoryIcon>
+            {isChangedIcon ? currentCategory.icons : selectedHistory?.category.icons}
+          </HistoryIcon>
+          <span>
+            {isChangedIcon ? currentCategory.text : selectedHistory?.category.text}
+          </span>
+        </HistoryIconWrapper>
+
+        <UpdateInputWrapper>
+          <UpdateInput>
+            <UpdateItemWrapper>
+              <input
+                onChange={validateOnlyNumbers}
+                type="number"
+                ref={updateCostRef}
+                placeholder={selectedHistory?.cost + "원"}
+              />
+            </UpdateItemWrapper>
+          </UpdateInput>
+
+          <UpdateInput>
+            <UpdateItemWrapper>
+              <input ref={updateDetailRef} placeholder={selectedHistory?.detail} />
+            </UpdateItemWrapper>
+          </UpdateInput>
+        </UpdateInputWrapper>
+
+        <SetType onClick={onOpenType}>
+          {changedType}
+          {openType ? <BsChevronUp /> : <BsChevronDown />}
+          {openType && <Dropdown onHandle={handleType} />}
+        </SetType>
+      </UpdateWrapper>
+
+      <ButtonWrapper>
+        <div onClick={props.onClose}>닫기</div>
+        <div onClick={onUpdate}>수정하기</div>
+      </ButtonWrapper>
+    </HistoryUpdateLayout>
+  );
+};
+
+export default HistoryUpdate;
+
+const HistoryUpdateLayout = styled.div`
   ${flexColumn};
   ${fullSize};
   box-sizing: border-box;
@@ -117,150 +256,3 @@ const ButtonWrapper = styled.div`
     color: white;
   }
 `;
-
-const HistoryUpdate = (props) => {
-  const currentCategory = useRecoilValue(currentCategoryAtom);
-  const history = useRecoilValue(historyAtom);
-  const selectedHistory = history.filter((his) => his?.id == props.selectedId)[0];
-  const isChangedIcon =
-    selectedHistory?.category.icons != currentCategory.icons &&
-    currentCategory.icons !== "";
-  const [changedType, setChangedType] = useState(selectedHistory.type);
-  const [openType, setOpentype] = useState(false);
-  const updateCostRef = useRef("");
-  const updateDetailRef = useRef("");
-
-  const onOpenType = () => {
-    setOpentype(true);
-  };
-  const handleType = (e) => {
-    setChangedType(e.currentTarget.name);
-    e.stopPropagation();
-    setOpentype(false);
-  };
-  const onUpdateIcon = useRecoilCallback(({ snapshot, set }) => async () => {
-    if (!isChangedIcon) return;
-    const historySnapshot = await snapshot.getPromise(historyAtom);
-    const updatedHistory = historySnapshot.map((prev) => {
-      if (prev?.id == props?.selectedId) {
-        return {
-          ...prev,
-          category: {
-            icons: currentCategory.icons,
-            text: currentCategory.text,
-          },
-        };
-      } else return prev;
-    });
-    set(historyAtom, updatedHistory);
-  });
-  const onUpdateCost = useRecoilCallback(({ snapshot, set }) => async () => {
-    const updateCostValue = updateCostRef.current.value;
-    if (updateCostValue == "" || updateCostValue == undefined) return;
-    const historySnapshot = await snapshot.getPromise(historyAtom);
-    const updatedHistory = historySnapshot.map((prev) => {
-      if (prev?.id == props?.selectedId) {
-        return {
-          ...prev,
-          cost: updateCostValue,
-        };
-      } else return prev;
-    });
-    set(historyAtom, updatedHistory);
-  });
-  const onUpdateDetail = useRecoilCallback(({ snapshot, set }) => async () => {
-    const updateDetailValue = updateDetailRef.current.value;
-    if (updateDetailValue == "" || updateDetailValue == undefined) return;
-    const historySnapshot = await snapshot.getPromise(historyAtom);
-    const updatedHistory = historySnapshot.map((prev) => {
-      if (prev?.id == props?.selectedId) {
-        return {
-          ...prev,
-          detail: updateDetailValue,
-        };
-      } else return prev;
-    });
-    set(historyAtom, updatedHistory);
-  });
-  const onUpdateType = useRecoilCallback(({ snapshot, set }) => async () => {
-    const isChangedType = selectedHistory.type != changedType;
-    if (!isChangedType) return;
-    const historySnapshot = await snapshot.getPromise(historyAtom);
-    const updatedHistory = historySnapshot.map((prev) => {
-      if (prev?.id == props?.selectedId) {
-        return {
-          ...prev,
-          type: changedType,
-        };
-      } else return prev;
-    });
-    set(historyAtom, updatedHistory);
-  });
-
-  const onUpdate = useRecoilCallback(({ snapshot, set }) => async () => {
-    await onUpdateCost();
-    await onUpdateIcon();
-    await onUpdateDetail();
-    await onUpdateType();
-    props.onClose();
-  });
-
-  const { validateOnlyNumbers } = useValidate();
-
-  return (
-    <HistoryUpdateWrapper>
-      <span>수정</span>
-
-      <UpdateWrapper>
-        <HistoryIconWrapper onClick={props.onCate}>
-          <HistoryIcon>
-            {isChangedIcon ? currentCategory.icons : selectedHistory?.category.icons}
-          </HistoryIcon>
-          <span>
-            {isChangedIcon ? currentCategory.text : selectedHistory?.category.text}
-          </span>
-        </HistoryIconWrapper>
-
-        <UpdateInputWrapper>
-          <UpdateInput>
-            <UpdateItemWrapper>
-              <input
-                onChange={validateOnlyNumbers}
-                type="number"
-                ref={updateCostRef}
-                placeholder={selectedHistory?.cost + "원"}
-              />
-            </UpdateItemWrapper>
-          </UpdateInput>
-
-          <UpdateInput>
-            <UpdateItemWrapper>
-              <input ref={updateDetailRef} placeholder={selectedHistory?.detail} />
-            </UpdateItemWrapper>
-          </UpdateInput>
-        </UpdateInputWrapper>
-
-        <SetType onClick={onOpenType}>
-          {changedType}
-          {openType ? (
-            <span>
-              <BsChevronUp />
-            </span>
-          ) : (
-            <span>
-              <BsChevronDown />
-            </span>
-          )}
-          {openType && <Dropdown onHandle={handleType} />}
-        </SetType>
-      </UpdateWrapper>
-
-      <ButtonWrapper>
-        <div onClick={props.onClose}>닫기</div>
-        <div onClick={onUpdate}>수정하기</div>
-      </ButtonWrapper>
-    </HistoryUpdateWrapper>
-  );
-};
-
-export default HistoryUpdate;

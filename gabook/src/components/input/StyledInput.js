@@ -5,7 +5,7 @@ const InputWrapper = styled.input`
   height: ${({ $height }) => ($height ? $height : "2.5rem")};
   box-sizing: border-box;
   padding-left: 1rem;
-  background: white;
+  background: ${({ $bgColor }) => ($bgColor ? $bgColor : "white")};
   border: ${({ $borderStyle }) => ($borderStyle ? $borderStyle : "none;")};
   border-radius: 0.5rem;
 
@@ -25,11 +25,13 @@ const StyledInput = (props) => {
   return (
     <form onSubmit={props.onSubmit}>
       <InputWrapper
+        data-placeholder={props.placeholder}
         $fontsize={props.fontsize}
         $width={props.width}
         $height={props.height}
         $outline={props.outline}
         $borderStyle={props.borderStyle}
+        $bgColor={props.bgColor}
         ref={props.inputRef}
         value={props.value}
         placeholder={props.placeholder}

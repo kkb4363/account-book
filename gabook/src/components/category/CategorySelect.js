@@ -1,8 +1,8 @@
-import { MdModeEditOutline } from 'react-icons/md';
-import styled from 'styled-components';
-import PrevIcon from '../common/PrevIcon';
-import CategoryView from './CategoryView';
-import { flexColumn, fullSize } from '../../styled/styled';
+import { MdModeEditOutline } from "react-icons/md";
+import styled from "styled-components";
+import PrevIcon from "../common/PrevIcon";
+import CategoryView from "./CategoryView";
+import { flexColumn, fullSize } from "../../styled/styled";
 
 const CategorySelectWrapper = styled.div`
   ${fullSize};
@@ -13,14 +13,14 @@ const CategorySelectWrapper = styled.div`
 
 const PrevWrapper = styled.div`
   width: 5%;
-  height: 20%;
+  height: 10%;
   margin-bottom: 2rem;
   cursor: pointer;
 `;
 
 const CategorySelectHeader = styled.div`
   width: 100%;
-  height: 20%;
+  height: 17%;
   display: flex;
   justify-content: space-between;
   align-items: center;

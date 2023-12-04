@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
+import styled from "styled-components";
 import useValidate from "../../hooks/useValidate";
+import { flexCenter, flexColumn } from "../../styled/styled";
 import Dropdown from "../common/Dropdown";
 import StyledInput from "../input/StyledInput";
 
@@ -26,23 +28,48 @@ const MoneyInput = (props) => {
   };
 
   return (
-    <>
+    <MoneyInputLayout>
       <StyledInput
         outline={"none"}
         fontsize="18px"
         type="text"
+        width="60vw"
         value={money}
-        placeholder={"금액을 입력해주세요"}
+        bgColor="rgb(244 244 244)"
         inputRef={props.moneyRef}
         onChange={onMoneyFormat}
       />
-      <span onClick={handleOpenType}>
-        {props.type}
-        {openType ? <BsChevronUp /> : <BsChevronDown />}
-      </span>
-      {openType && <Dropdown onHandle={handleSetType} />}
-    </>
+
+      <DivisionCol>
+        <label>구분</label>
+        <span onClick={handleOpenType}>
+          {props.type}
+          {openType ? <BsChevronUp /> : <BsChevronDown />}
+        </span>
+        {openType && <Dropdown onHandle={handleSetType} />}
+      </DivisionCol>
+    </MoneyInputLayout>
   );
 };
 
 export default MoneyInput;
+
+const MoneyInputLayout = styled.div`
+  width: 90vw;
+  height: 100%;
+  ${flexCenter};
+  justify-content: flex-start;
+  gap: 20px;
+`;
+
+const DivisionCol = styled.div`
+  ${flexColumn};
+  margin: -30px 30px 0 0;
+  gap: 10px;
+  position: relative;
+
+  & > label {
+    font-size: ${(props) => props.theme.fontsize.sm};
+    font-weight: ${(props) => props.theme.weight.lg};
+  }
+`;

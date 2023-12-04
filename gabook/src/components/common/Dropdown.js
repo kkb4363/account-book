@@ -1,5 +1,5 @@
-import styled, { keyframes } from 'styled-components';
-import { flexCenter } from '../../styled/styled';
+import styled, { keyframes } from "styled-components";
+import { flexCenter } from "../../styled/styled";
 
 const dropdown_keyframes = keyframes`
     from{
@@ -19,7 +19,7 @@ const DropdownWrapper = styled.div`
   flex-direction: column;
   position: absolute;
   right: 0;
-  bottom: -5rem;
+  top: 6vh;
   z-index: 1;
   background: white;
   border-radius: 10px;
@@ -42,10 +42,10 @@ const DropdownWrapper = styled.div`
 const Dropdown = (props) => {
   const dropdownItems = [
     {
-      iname: '지출',
+      iname: "지출",
     },
     {
-      iname: '수입',
+      iname: "수입",
     },
   ];
 

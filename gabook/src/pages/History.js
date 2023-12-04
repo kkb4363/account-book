@@ -14,10 +14,12 @@ import MotionInputs from "../components/motion/MotionInput";
 import useAddHistory from "../hooks/useAddHistory";
 import UseHandler from "../hooks/useHandler";
 import { flexColumn, fullScreen } from "../styled/styled";
+import utils from "../utils/utils";
 
 const History = () => {
   const setCurrentCategory = useSetRecoilState(currentCategoryAtom);
   const { open: openAdd, handleToggle: handleAdd, openItems } = useAddHistory();
+  const { costFormatter } = utils();
   const history = useRecoilValue(historyAtom);
   const navigate = useNavigate();
   const date = new Date();
@@ -73,15 +75,27 @@ const History = () => {
 
   const expenses = currentMonthDatas?.reduce((acc, cur) => {
     const isExpenses = cur.type == "지출";
-    if (isExpenses) acc += Number(cur.cost);
+    if (isExpenses) {
+      const costWithoutComma = cur.cost.replace(/,/g, "");
+      acc += Number(costWithoutComma);
+    }
     return acc;
   }, 0);
 
   const income = currentMonthDatas?.reduce((acc, cur) => {
     const isIncome = cur.type == "수입";
-    if (isIncome) acc += Number(cur.cost);
+    if (isIncome) {
+      const costWithoutComma = cur.cost.replace(/,/g, "");
+      acc += Number(costWithoutComma);
+    }
     return acc;
   }, 0);
+
+  const totalCost = () => {
+    const isMinus = income - expenses < 0;
+    if (!isMinus) return "+" + costFormatter(income - expenses);
+    else return "-" + costFormatter(income - expenses);
+  };
 
   const groupedData = currentMonthDatas.reduce((groups, item) => {
     const date = new Date(item.date);
@@ -108,7 +122,6 @@ const History = () => {
         {data.map((his, idx) => (
           <HistoryItem
             key={idx}
-            date={his.date}
             cost={his.cost}
             cate={his.category}
             detail={his.detail}
@@ -141,9 +154,9 @@ const History = () => {
 
         <HeaderTotal>
           <span>{current.month}월 내 소비</span>
-          <span>수입 : {"+" + income}원</span>
-          <span>지출 : {"-" + expenses}원</span>
-          <span>합계 : {income - expenses}원</span>
+          <span>수입 : {"+" + costFormatter(income)}원</span>
+          <span>지출 : {"-" + costFormatter(expenses)}원</span>
+          <span>합계 : {totalCost()}원</span>
         </HeaderTotal>
       </HistoryHeader>
 
@@ -255,7 +268,7 @@ const HeaderTotal = styled.div`
   justify-content: space-around;
   margin: 0 0 -2.5rem -2rem;
 
-  font-size: ${({ theme }) => theme.fontsize.md};
+  font-size: ${({ theme }) => theme.fontsize.sm};
   font-weight: ${({ theme }) => theme.weight.lg};
   color: black;
   background-color: white;
@@ -289,6 +302,7 @@ const CurrentText = styled.span`
   height: 10%;
   display: flex;
   align-items: center;
+  box-sizing: border-box;
   padding-left: 1.5rem;
 
   font-size: ${({ theme }) => theme.fontsize.xxxl};

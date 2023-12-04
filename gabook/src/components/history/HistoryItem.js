@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { historyAtom } from "../../atoms/HistoryAtom";
 import { flexCenter, flexColumn } from "../../styled/styled";
 import DeleteConfirm from "../common/DeleteConfirm";
+import utils from "../../utils/utils";
 
 const HistoryItemWrapper = styled.div`
   width: 100%;
@@ -63,20 +64,6 @@ export const HistoryCost = styled.div`
   }
 `;
 
-const HistoryDate = styled.div`
-  width: 20%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-
-  p {
-    font-size: ${({ theme }) => theme.fontsize.sm};
-    font-weight: ${({ theme }) => theme.weight.lg};
-    white-space: nowrap;
-    color: ${({ theme }) => theme.colors.dark};
-  }
-`;
-
 const EditIcon = styled.div`
   width: 5%;
   height: 100%;
@@ -88,9 +75,12 @@ const EditIcon = styled.div`
 
 const HistoryItem = (props) => {
   const [history, setHistory] = useRecoilState(historyAtom);
+  const { costFormatter } = utils();
   const [openDelete, setOpenDelete] = useState(false);
   const isExpenses = props?.type == "지출";
-  const cost = isExpenses ? "-" + props?.cost : "+" + props?.cost;
+  const cost = isExpenses
+    ? "-" + costFormatter(props?.cost)
+    : "+" + costFormatter(props?.cost);
 
   const handleDelete = () => setOpenDelete((prev) => !prev);
 
@@ -110,10 +100,6 @@ const HistoryItem = (props) => {
         <p>{cost}원</p>
         <span>{props?.detail}</span>
       </HistoryCost>
-
-      <HistoryDate>
-        <p>{props?.date}</p>
-      </HistoryDate>
 
       <EditIcon onClick={() => props.onEdit(props.id)}>
         <GiHamburgerMenu />
