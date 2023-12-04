@@ -13,13 +13,19 @@ const mainText = [
   {
     title: "누구나 간편하게 사용가능한 가게부 웹사이트입니다",
   },
+  {
+    title: "데이터는 로컬스토리지에 저장됩니다.",
+  },
+  {
+    title: "따라서 인터넷 사용기록을 지우게 되면 데이터가 삭제되니 주의해주세요.",
+  },
 ];
 
 const Main = () => {
   const { open, handleToggle, openItems } = useAddHistory();
 
   return (
-    <Wrapper>
+    <MainLayout>
       <ImgSlide />
 
       <MainText>
@@ -28,9 +34,9 @@ const Main = () => {
         ))}
       </MainText>
 
-      <Menubar onClick={() => handleToggle("menubar")}>
+      <MenubarIcon onClick={() => handleToggle("menubar")}>
         <GiHamburgerMenu />
-      </Menubar>
+      </MenubarIcon>
 
       <PlusIcon onClick={() => handleToggle("addMoney")} />
 
@@ -40,13 +46,13 @@ const Main = () => {
             <React.Fragment key={"opendataskey" + idx}>{item.data}</React.Fragment>
           )
       )}
-    </Wrapper>
+    </MainLayout>
   );
 };
 
 export default Main;
 
-const Wrapper = styled.div`
+const MainLayout = styled.div`
   ${fullScreen};
   ${flexColumn};
   justify-content: center;
@@ -56,6 +62,7 @@ const Wrapper = styled.div`
 
 const MainText = styled.div`
   ${flexColumn};
+  align-items: center;
   margin-bottom: 0;
   gap: 5px;
 
@@ -70,20 +77,7 @@ const MainText = styled.div`
   }
 `;
 
-const InputMoney = styled.div`
-  width: 100%;
-  height: 7.5vh;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 0.5rem;
-
-  @media screen and (min-width: 1000px) {
-    width: 80%;
-  }
-`;
-
-export const Menubar = styled.div`
+const MenubarIcon = styled.div`
   position: absolute;
   top: 0.75rem;
   right: 0.75rem;
