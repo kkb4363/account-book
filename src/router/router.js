@@ -1,20 +1,25 @@
-import { createBrowserRouter } from 'react-router-dom';
-import App from '../App';
-import History from '../pages/History';
-import Main from '../pages/Main';
+import { createBrowserRouter } from "react-router-dom";
+import App from "../App";
+import History from "../pages/History";
+import Main from "../pages/Main";
+import Statistics from "../pages/Statistics";
 
 const router = createBrowserRouter([
   {
-    path: '',
+    path: "",
     element: <App />,
     children: [
       {
-        path: '/',
+        path: "/",
         element: <Main />,
       },
       {
-        path: '/history',
+        path: "/history",
         element: <History />,
+      },
+      {
+        path: "/statistics",
+        element: <Statistics />,
       },
     ],
   },

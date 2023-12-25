@@ -18,4 +18,8 @@ const ImgSlideLayout = styled.div`
   inset: 0;
   margin: 0 auto;
   z-index: -1;
+
+  & > img {
+    object-fit: cover;
+  }
 `;

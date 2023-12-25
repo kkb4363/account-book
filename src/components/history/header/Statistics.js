@@ -38,12 +38,12 @@ export default function HistoryStatistics(props) {
 
 const HistoryStatisticsRow = styled.div`
   width: 100vw;
-  height: 20%;
+  height: 5vh;
+  margin-top: 30px;
   display: flex;
   align-items: center;
   justify-content: space-around;
-  margin: 0 0 -2.5rem -2rem;
-  background-color: white;
+  background-color: white
 
   font-size: ${({ theme }) => theme.fontsize.sm};
   font-weight: ${({ theme }) => theme.weight.lg};

@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { keyframes, styled } from "styled-components";
 import { currentCategoryAtom } from "../atoms/CategoryAtom";
-import { historyAtom } from "../atoms/HistoryAtom";
 import CategorySelect from "../components/category/CategorySelect";
 import CategoryUpdate from "../components/category/CategoryUpdate";
 import PlusIcon from "../components/common/PlusIcon";
@@ -11,34 +10,38 @@ import HistoryUpdate from "../components/history/HistoryUpdate";
 import HistoryHeader from "../components/history/header/Header";
 import MotionInputs from "../components/motion/MotionInput";
 import useAddHistory from "../hooks/useAddHistory";
+import useCurrentMonthDatas from "../hooks/useCurrentMonthDatas";
 import UseHandler from "../hooks/useHandler";
 import { flexColumn, fullScreen } from "../styled/styled";
 
 const History = () => {
   const { open: openAdd, handleToggle: handleAdd, openItems } = useAddHistory();
-  const setCurrentCategory = useSetRecoilState(currentCategoryAtom);
-  const history = useRecoilValue(historyAtom);
-  const date = new Date();
+  const {
+    current,
+    setCurrent,
+    currentMonthDatas,
+    prevMonth,
+    nextMonth,
+    handleMonthPrev,
+    handleMonthNext,
+  } = useCurrentMonthDatas();
   const fields = ["category", "addCategory"];
   const [open, closeAll, handleToggle] = UseHandler(fields);
+
+  const setCurrentCategory = useSetRecoilState(currentCategoryAtom);
   const [edit, setEdit] = useState({
     open: false,
     id: "",
   });
-  const [current, setCurrent] = useState({
-    month: date.getMonth() + 1,
-    year: date.getFullYear(),
-  });
-  const currentDate = current.year + "" + current.month;
 
-  const openEditHandler = (sid) => {
+  const handleEditOpen = (sid) => {
     setEdit({
       open: true,
       id: sid,
     });
   };
 
-  const closeEditHandler = () => {
+  const handleEditClose = () => {
     setEdit({
       open: false,
       id: "",
@@ -49,12 +52,7 @@ const History = () => {
     });
   };
 
-  const openCategory = () => handleToggle("category");
-
-  const currentMonthDatas = history?.filter((item) => {
-    const checkValue = item?.date?.slice(0, 4) + item?.date?.slice(5, 7);
-    return checkValue == currentDate;
-  });
+  const handleCategoryOpen = () => handleToggle("category");
 
   const groupedData = currentMonthDatas.reduce((groups, item) => {
     const date = new Date(item.date);
@@ -86,7 +84,7 @@ const History = () => {
             detail={his.detail}
             type={his.type}
             id={his.id}
-            onEdit={openEditHandler}
+            onEdit={handleEditOpen}
           />
         ))}
       </>
@@ -98,6 +96,10 @@ const History = () => {
         currentDateHistories={currentMonthDatas}
         current={current}
         setCurrent={setCurrent}
+        prevMonth={prevMonth}
+        nextMonth={nextMonth}
+        handleMonthPrev={handleMonthPrev}
+        handleMonthNext={handleMonthNext}
       />
       <HistoryTitle>최근 내역</HistoryTitle>
       <HistoryCurrentCol>{result}</HistoryCurrentCol>
@@ -111,11 +113,11 @@ const History = () => {
       )}
 
       {edit.open && (
-        <MotionInputs height="30vh" onClose={closeEditHandler}>
+        <MotionInputs height="30vh" onClose={handleEditClose}>
           <HistoryUpdate
             selectedId={edit.id}
-            onClose={closeEditHandler}
-            onCate={openCategory}
+            onClose={handleEditClose}
+            onCate={handleCategoryOpen}
           />
         </MotionInputs>
       )}
@@ -123,7 +125,7 @@ const History = () => {
       {open.category && (
         <MotionInputs onClose={closeAll}>
           <CategorySelect
-            onCategory={openCategory}
+            onCategory={handleCategoryOpen}
             onAddCate={() => handleToggle("addCategory")}
           />
         </MotionInputs>
@@ -157,13 +159,12 @@ const HistoryLayout = styled.div`
 
 const HistoryCurrentCol = styled.div`
   width: 100%;
-  height: 50%;
+  height: 60%;
   ${flexColumn};
   gap: 1rem;
   box-sizing: border-box;
   padding: 2rem;
   overflow: scroll;
-
   &::-webkit-scrollbar {
     display: none;
   }

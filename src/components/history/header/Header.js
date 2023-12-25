@@ -1,79 +1,67 @@
-import styled from "styled-components";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
-import { flexColumn } from "../../../styled/styled";
 import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import PrevIcon from "../../common/PrevIcon";
 import HistoryStatistics from "./Statistics";
 
 export default function HistoryHeader(props) {
   const navigate = useNavigate();
-
-  const prevMonth = props.current.month - 1 == 0 ? 12 : props.current.month - 1;
-  const nextMonth = props.current.month + 1 == 13 ? 1 : props.current.month + 1;
   const currentDate = props.current.year + "" + props.current.month;
 
-  const onPrevMonth = () => {
-    const prevMon = props.current.month - 1 == 0 ? 12 : props.current.month - 1;
-    const prevYear = prevMonth == 12 ? props.current.year - 1 : props.current.year;
-    props.setCurrent({
-      month: prevMon,
-      year: prevYear,
-    });
-  };
-  const onNextMonth = () => {
-    const nextMon = props.current.month + 1 == 13 ? 1 : props.current.month + 1;
-    const nextYear = nextMon == 1 ? props.current.year + 1 : props.current.year;
-    props.setCurrent({ month: nextMon, year: nextYear });
-  };
-
   return (
-    <HistoryHeaderLayout>
-      <div onClick={() => navigate("/")}>
-        <AiOutlineLeft />
-      </div>
+    <>
+      <HistoryHeaderLayout>
+        <div>
+          <PrevIcon onClick={() => navigate(-1)} />
+        </div>
 
-      <DateRow>
-        <span>{prevMonth}</span>
-        <span onClick={onPrevMonth}>
-          <AiOutlineLeft />
-        </span>
-        <span>{props.current.month}</span>
-        <span onClick={onNextMonth}>
-          <AiOutlineRight />
-        </span>
-        <span>{nextMonth}</span>
-      </DateRow>
-
+        <DateRow>
+          <span>{props.prevMonth}</span>
+          <span onClick={props.handleMonthPrev}>
+            <AiOutlineLeft />
+          </span>
+          <span>{props.current.month}</span>
+          <span onClick={props.handleMonthNext}>
+            <AiOutlineRight />
+          </span>
+          <span>{props.nextMonth}</span>
+        </DateRow>
+      </HistoryHeaderLayout>
       <HistoryStatistics
         currentDateHistories={props.currentDateHistories}
         current={props.current}
         currentDate={currentDate}
       />
-    </HistoryHeaderLayout>
+    </>
   );
 }
 
 const HistoryHeaderLayout = styled.div`
-  width: 100%;
-  height: 30%;
-  ${flexColumn};
-  justify-content: space-evenly;
+  width: 100vw;
+  height: 10vh;
+  display: flex;
+  align-items: center;
   background: #3f3e3e;
   box-sizing: border-box;
   padding: 0 2rem 0 2rem;
+  position: relative;
 
   div:first-child {
+    position: absolute;
+    left: 3vw;
+    top: 0;
+    bottom: 0;
     cursor: pointer;
 
     color: white;
-    font-size: ${({ theme }) => theme.fontsize.xxxl};
   }
 `;
 
 const DateRow = styled.div`
   width: 100%;
-  height: 25%;
+  height: 100%;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-around;
 
   font-size: 2rem;

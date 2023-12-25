@@ -3,6 +3,35 @@ import styled, { keyframes } from "styled-components";
 import Overlay from "./Overlay";
 import { flexColumn } from "../../styled/styled";
 
+const MenuNavbar = (props) => {
+  const navi = useNavigate();
+
+  const navItems = [
+    {
+      text: "History",
+      onclick: () => navi("/history"),
+    },
+    {
+      text: "Statistics",
+      onclick: () => navi("/statistics"),
+    },
+  ];
+  return (
+    <>
+      <MenuNavbarLayout>
+        {navItems.map((item, idx) => (
+          <MenuNavbarItem onClick={item.onclick} key={"menunavbarkey=" + idx}>
+            {item.text}
+          </MenuNavbarItem>
+        ))}
+      </MenuNavbarLayout>
+      <Overlay onClose={props.onClose} />
+    </>
+  );
+};
+
+export default MenuNavbar;
+
 const menunavbar_keyframes = keyframes`
     from{
         opacity:0.5;
@@ -42,32 +71,3 @@ const MenuNavbarItem = styled.div`
     color: rgb(0, 0, 0, 0.5);
   }
 `;
-
-const MenuNavbar = (props) => {
-  const navi = useNavigate();
-
-  const navItems = [
-    {
-      text: "History",
-      onclick: () => navi("/history"),
-    },
-    {
-      text: "Statistics",
-      onclick: () => alert("개발 예정🧑🏼‍💻"),
-    },
-  ];
-  return (
-    <>
-      <MenuNavbarLayout>
-        {navItems.map((item, idx) => (
-          <MenuNavbarItem onClick={item.onclick} key={"menunavbarkey=" + idx}>
-            {item.text}
-          </MenuNavbarItem>
-        ))}
-      </MenuNavbarLayout>
-      <Overlay onClose={props.onClose} />
-    </>
-  );
-};
-
-export default MenuNavbar;

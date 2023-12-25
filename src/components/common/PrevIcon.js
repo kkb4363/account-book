@@ -1,20 +1,19 @@
-import styled from 'styled-components';
-import { BsChevronLeft } from 'react-icons/bs';
-import { flexCenter, fullSize } from '../../styled/styled';
-const PrevIconWrapper = styled.div`
-  ${fullSize};
-  ${flexCenter};
+import styled from "styled-components";
+import { BsChevronLeft } from "react-icons/bs";
+import { flexCenter, fullSize } from "../../styled/styled";
 
-  font-size: ${({ theme }) => theme.fontsize.xxxl};
-  font-weight: ${({ theme }) => theme.weight.lg};
-`;
-
-const PrevIcon = () => {
+const PrevIcon = ({ onClick }) => {
   return (
-    <PrevIconWrapper>
-      <BsChevronLeft />
-    </PrevIconWrapper>
+    <PrevIconLayout onClick={onClick}>
+      <BsChevronLeft size={24} />
+    </PrevIconLayout>
   );
 };
 
 export default PrevIcon;
+
+const PrevIconLayout = styled.div`
+  ${flexCenter};
+
+  font-weight: ${({ theme }) => theme.weight.lg};
+`;
