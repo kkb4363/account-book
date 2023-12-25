@@ -82,27 +82,3 @@ const DateRow = styled.div`
     width: 50%;
   }
 `;
-
-const StatisticsRow = styled.div`
-  width: 100vw;
-  height: 20%;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  margin: 0 0 -2.5rem -2rem;
-  background-color: white;
-
-  font-size: ${({ theme }) => theme.fontsize.sm};
-  font-weight: ${({ theme }) => theme.weight.lg};
-  color: black;
-
-  span:first-child {
-    color: gray;
-  }
-  span:nth-child(2) {
-    color: ${({ theme }) => theme.colors.blue};
-  }
-  span:nth-child(3) {
-    color: ${({ theme }) => theme.colors.error};
-  }
-`;

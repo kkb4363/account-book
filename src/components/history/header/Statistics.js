@@ -43,7 +43,14 @@ const HistoryStatisticsRow = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background-color: white
+  background-color: white;
+
+  @media screen and (max-width: 800px) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    place-items: center;
+    gap: 10px;
+  }
 
   font-size: ${({ theme }) => theme.fontsize.sm};
   font-weight: ${({ theme }) => theme.weight.lg};

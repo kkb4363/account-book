@@ -5,7 +5,7 @@ import PrevIcon from "../components/common/PrevIcon";
 import CategoryChart from "../components/statistics/CategoryChart";
 import CostChart from "../components/statistics/CostChart";
 import useCurrentMonthDatas from "../hooks/useCurrentMonthDatas";
-import { flexCenter } from "../styled/styled";
+import { flexCenter, flexColumn } from "../styled/styled";
 
 export default function Statistics() {
   return (
@@ -72,6 +72,12 @@ const MainLayout = styled.div`
   width: 100vw;
   height: 90vh;
   ${flexCenter};
+
+  @media screen and (max-width: 960px) {
+    flex-direction: column;
+    margin-top: 10vh;
+    gap: 60px;
+  }
 
   & > div {
     width: 50%;
