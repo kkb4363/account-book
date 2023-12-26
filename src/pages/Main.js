@@ -4,7 +4,8 @@ import { styled } from "styled-components";
 import PlusIcon from "../components/common/PlusIcon";
 import ImgSlide from "../components/main/ImgSlide";
 import useAddHistory from "../hooks/useAddHistory";
-import { flexColumn, fullScreen } from "../styled/styled";
+import { flexCenter, flexColumn, fullScreen } from "../styled/styled";
+import MenubarIcon from "../components/common/MenubarIcon";
 
 const mainText = [
   {
@@ -26,6 +27,10 @@ const Main = () => {
 
   return (
     <MainLayout>
+      <Head>
+        <MenubarIcon handleToggle={handleToggle} />
+      </Head>
+
       <ImgSlide />
 
       <MainText>
@@ -33,10 +38,6 @@ const Main = () => {
           <span key={"maintextkey=" + idx}>{item.title}</span>
         ))}
       </MainText>
-
-      <MenubarIcon onClick={() => handleToggle("menubar")}>
-        <GiHamburgerMenu />
-      </MenubarIcon>
 
       <PlusIcon onClick={() => handleToggle("addMoney")} />
 
@@ -52,17 +53,33 @@ const Main = () => {
 
 export default Main;
 
+const Head = styled.div`
+  width: inherit;
+  height: 10vh;
+  ${flexCenter};
+  position: relative;
+
+  & > div {
+    right: 3vw;
+    position: absolute;
+  }
+`;
+
 const MainLayout = styled.div`
   ${fullScreen};
   ${flexColumn};
-  justify-content: center;
-  align-items: center;
   position: relative;
 `;
 
 const MainText = styled.div`
-  ${flexColumn};
-  align-items: center;
+  width: 50%;
+  @media screen and (max-width: 500px) {
+    width: 100%;
+  }
+
+  height: 80%;
+  ${flexCenter};
+  flex-direction: column;
   margin-bottom: 0;
   gap: 5px;
 
@@ -70,23 +87,8 @@ const MainText = styled.div`
   font-weight: ${({ theme }) => theme.weight.xxl};
   span:first-child {
     font-size: 2rem;
-    text-align: center;
   }
   span:last-child {
     font-size: ${({ theme }) => theme.weight.xl};
-  }
-`;
-
-const MenubarIcon = styled.div`
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  cursor: pointer;
-
-  font-size: 1.5rem;
-  color: white;
-
-  &:hover {
-    color: lightgray;
   }
 `;

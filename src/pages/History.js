@@ -27,7 +27,6 @@ const History = () => {
   } = useCurrentMonthDatas();
   const fields = ["category", "addCategory"];
   const [open, closeAll, handleToggle] = UseHandler(fields);
-
   const setCurrentCategory = useSetRecoilState(currentCategoryAtom);
   const [edit, setEdit] = useState({
     open: false,
@@ -54,56 +53,24 @@ const History = () => {
 
   const handleCategoryOpen = () => handleToggle("category");
 
-  const groupedData = currentMonthDatas.reduce((groups, item) => {
-    const date = new Date(item.date);
-    const day = date.getDate();
-    if (!groups[day]) {
-      groups[day] = [];
-    }
-    groups[day].push(item);
-
-    return groups;
-  }, {});
-
-  const groupedDataArray = Object.entries(groupedData).map(([day, dayData]) => ({
-    day: day,
-    data: dayData,
-  }));
-
-  const result = groupedDataArray
-    .slice()
-    .reverse()
-    .map(({ day, data }) => (
-      <>
-        <span style={{ fontSize: "1rem", color: "rgb(0,0,0,0.7)" }}>{day}일</span>
-        {data.map((his, idx) => (
-          <HistoryItem
-            key={idx}
-            cost={his.cost}
-            cate={his.category}
-            detail={his.detail}
-            type={his.type}
-            id={his.id}
-            onEdit={handleEditOpen}
-          />
-        ))}
-      </>
-    ));
+  const headerProps = {
+    current,
+    setCurrent,
+    currentMonthDatas,
+    prevMonth,
+    nextMonth,
+    handleMonthPrev,
+    handleMonthNext,
+  };
 
   return (
     <HistoryLayout>
-      <HistoryHeader
-        currentDateHistories={currentMonthDatas}
-        current={current}
-        setCurrent={setCurrent}
-        prevMonth={prevMonth}
-        nextMonth={nextMonth}
-        handleMonthPrev={handleMonthPrev}
-        handleMonthNext={handleMonthNext}
+      <HistoryHeader {...headerProps} handleAdd={handleAdd} />
+      <Body
+        handleAdd={handleAdd}
+        currentMonthDatas={currentMonthDatas}
+        handleEditOpen={handleEditOpen}
       />
-      <HistoryTitle>최근 내역</HistoryTitle>
-      <HistoryCurrentCol>{result}</HistoryCurrentCol>
-      <PlusIcon onClick={() => handleAdd("addMoney")} />
 
       {openItems.map(
         (item, idx) =>
@@ -141,6 +108,51 @@ const History = () => {
 };
 
 export default History;
+
+const Body = ({ handleAdd, currentMonthDatas, handleEditOpen }) => {
+  const groupedData = currentMonthDatas.reduce((groups, item) => {
+    const date = new Date(item.date);
+    const day = date.getDate();
+    if (!groups[day]) {
+      groups[day] = [];
+    }
+    groups[day].push(item);
+
+    return groups;
+  }, {});
+
+  const groupedDataArray = Object.entries(groupedData).map(([day, dayData]) => ({
+    day: day,
+    data: dayData,
+  }));
+
+  const result = groupedDataArray
+    .slice()
+    .reverse()
+    .map(({ day, data }) => (
+      <>
+        <span style={{ fontSize: "1rem", color: "rgb(0,0,0,0.7)" }}>{day}일</span>
+        {data.map((his) => (
+          <HistoryItem
+            key={Date.now()}
+            cost={his.cost}
+            cate={his.category}
+            detail={his.detail}
+            type={his.type}
+            id={his.id}
+            onEdit={handleEditOpen}
+          />
+        ))}
+      </>
+    ));
+  return (
+    <>
+      <HistoryTitle>최근 내역</HistoryTitle>
+      <HistoryCurrentCol>{result}</HistoryCurrentCol>
+      <PlusIcon onClick={() => handleAdd("addMoney")} />
+    </>
+  );
+};
 
 const HistoryKeyframes = keyframes`
   from{

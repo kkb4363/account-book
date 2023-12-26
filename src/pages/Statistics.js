@@ -1,27 +1,40 @@
+import React from "react";
 import { AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import MenubarIcon from "../components/common/MenubarIcon";
 import PrevIcon from "../components/common/PrevIcon";
 import CategoryChart from "../components/statistics/CategoryChart";
 import CostChart from "../components/statistics/CostChart";
+import useAddHistory from "../hooks/useAddHistory";
 import useCurrentMonthDatas from "../hooks/useCurrentMonthDatas";
 import { flexCenter, flexColumn } from "../styled/styled";
 
 export default function Statistics() {
+  const { open, handleToggle, openItems } = useAddHistory();
+
   return (
-    <div>
-      <Header />
+    <StatisticsLayout>
+      <Header handleToggle={handleToggle} />
       <Main />
-    </div>
+
+      {openItems.map(
+        (item, idx) =>
+          open[item.condition] && (
+            <React.Fragment key={"opendataskey" + idx}>{item.data}</React.Fragment>
+          )
+      )}
+    </StatisticsLayout>
   );
 }
 
-const Header = () => {
+const Header = ({ handleToggle }) => {
   const navigate = useNavigate();
   return (
     <HeaderLayout>
-      <PrevIcon onClick={() => navigate(-1)} />
+      <PrevIcon onClick={() => navigate("/")} />
       지출 통계
+      <MenubarIcon handleToggle={handleToggle} />
     </HeaderLayout>
   );
 };
@@ -51,36 +64,46 @@ const Main = () => {
   );
 };
 
+const StatisticsLayout = styled.div`
+  position: relative;
+  ${flexColumn};
+`;
+
 const HeaderLayout = styled.div`
   width: 100vw;
   height: 10vh;
   ${flexCenter};
-
   background-color: #3f3e3e;
+
   color: white;
   font-size: 22px;
   font-weight: 600;
 
   & > div:first-child {
     position: absolute;
-    left: 5vw;
+    left: 3vw;
     cursor: pointer;
+  }
+
+  & > div:last-child {
+    position: absolute;
+    right: 3vw;
   }
 `;
 
 const MainLayout = styled.div`
-  width: 100vw;
-  height: 90vh;
+  width: 100%;
+  height: 90%;
   ${flexCenter};
+  margin-top: 10vh;
 
   @media screen and (max-width: 960px) {
     flex-direction: column;
-    margin-top: 10vh;
     gap: 60px;
   }
 
   & > div {
-    width: 50%;
+    width: 100%;
     height: 100%;
     ${flexCenter};
     flex-direction: column;

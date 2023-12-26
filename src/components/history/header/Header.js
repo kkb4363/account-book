@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import PrevIcon from "../../common/PrevIcon";
 import HistoryStatistics from "./Statistics";
+import MenubarIcon from "../../common/MenubarIcon";
 
 export default function HistoryHeader(props) {
   const navigate = useNavigate();
@@ -11,10 +12,8 @@ export default function HistoryHeader(props) {
   return (
     <>
       <HistoryHeaderLayout>
-        <div>
-          <PrevIcon onClick={() => navigate(-1)} />
-        </div>
-
+        <PrevIcon onClick={() => navigate("/")} />
+        <MenubarIcon handleToggle={props.handleAdd} />
         <DateRow>
           <span>{props.prevMonth}</span>
           <span onClick={props.handleMonthPrev}>
@@ -27,8 +26,9 @@ export default function HistoryHeader(props) {
           <span>{props.nextMonth}</span>
         </DateRow>
       </HistoryHeaderLayout>
+
       <HistoryStatistics
-        currentDateHistories={props.currentDateHistories}
+        currentDateHistories={props.currentMonthDatas}
         current={props.current}
         currentDate={currentDate}
       />
@@ -55,6 +55,15 @@ const HistoryHeaderLayout = styled.div`
 
     color: white;
   }
+
+  div:nth-child(2) {
+    position: absolute;
+    right: 3vw;
+    top: 0;
+    bottom: 0;
+
+    color: white;
+  }
 `;
 
 const DateRow = styled.div`
@@ -67,6 +76,12 @@ const DateRow = styled.div`
   font-size: 2rem;
   font-weight: ${({ theme }) => theme.weight.lg};
   color: gray;
+
+  @media screen and (max-width: 500px) {
+    justify-content: center;
+    gap: 20px;
+    font-size: 1.5rem;
+  }
 
   span:nth-child(3) {
     color: white;

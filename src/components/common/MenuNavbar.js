@@ -8,11 +8,11 @@ const MenuNavbar = (props) => {
 
   const navItems = [
     {
-      text: "History",
+      text: "내역",
       onclick: () => navi("/history"),
     },
     {
-      text: "Statistics",
+      text: "통계",
       onclick: () => navi("/statistics"),
     },
   ];
@@ -45,9 +45,9 @@ const menunavbar_keyframes = keyframes`
 
 const MenuNavbarLayout = styled.div`
   width: 30%;
-  height: 100vh;
+  height: 100%;
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   right: 0;
   background: white;
   ${flexColumn};

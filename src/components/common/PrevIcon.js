@@ -14,6 +14,7 @@ export default PrevIcon;
 
 const PrevIconLayout = styled.div`
   ${flexCenter};
-
+  cursor: pointer;
+  color: white;
   font-weight: ${({ theme }) => theme.weight.lg};
 `;
