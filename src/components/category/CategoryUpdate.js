@@ -3,31 +3,126 @@ import { useRef, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { currentCategoriesAtom } from "../../atoms/CategoryAtom";
+import { flexCenter, flexColumn, fullSize } from "../../styled/styled";
 import StyledButton from "../button/StyledButton";
 import ErrorInform from "../common/ErrorInform";
 import Overlay from "../common/Overlay";
 import PrevIcon from "../common/PrevIcon";
 import StyledInput from "../input/StyledInput";
 import CategoryView from "./CategoryView";
-import { flexCenter, flexColumn, fullSize } from "../../styled/styled";
 
-const CategoryUpdateWrapper = styled.div`
+export default function CategoryUpdate(props) {
+  return (
+    <CategoryUpdateLayout>
+      <PrevBox onClick={props.onAddCate}>
+        <PrevIcon dark />
+      </PrevBox>
+      <CategoryAdd />
+      <PrevCategories />
+    </CategoryUpdateLayout>
+  );
+}
+
+const CategoryAdd = () => {
+  const setCurrentCategoriesAtom = useSetRecoilState(currentCategoriesAtom);
+  const [nameError, setNameError] = useState(false);
+  const [emojiOpen, setEmojiOpen] = useState(false);
+  const [emoji, setEmoji] = useState("😀");
+  const newCategoryNameRef = useRef("");
+  const handleCategoryAdd = () => {
+    if (newCategoryNameRef.current.value == "") {
+      setNameError(true);
+      return;
+    }
+
+    setCurrentCategoriesAtom((prev) => [
+      ...prev,
+      {
+        icon: emoji,
+        text: newCategoryNameRef.current.value,
+      },
+    ]);
+    newCategoryNameRef.current.value = "";
+  };
+
+  const handleNameError = () => {
+    const newCategoryNameValue = newCategoryNameRef.current.value;
+    if (newCategoryNameValue == "" || newCategoryNameValue == undefined)
+      setNameError(true);
+    else setNameError(false);
+  };
+
+  const handleEmojiOpen = () => {
+    setEmojiOpen((prev) => !prev);
+  };
+
+  const handleEmojiSelect = (emoji) => {
+    setEmoji(emoji.emoji);
+    handleEmojiOpen();
+  };
+
+  return (
+    <>
+      <HeaderTitle>
+        <span>카테고리</span>
+        <span>카테고리를 추가하거나 수정할 수 있어요</span>
+      </HeaderTitle>
+
+      <AddCategoryInput>
+        <SetIcon onClick={handleEmojiOpen}>{emoji}</SetIcon>
+        <StyledInput
+          width="100%"
+          placeholder="이름을 입력해주세요"
+          inputRef={newCategoryNameRef}
+          borderStyle="1px solid lightgray"
+          onBlur={handleNameError}
+        />
+        <StyledButton onClick={handleCategoryAdd} height="2.5rem">
+          추가하기
+        </StyledButton>
+      </AddCategoryInput>
+
+      {nameError && <ErrorInform text="카테고리 이름을 입력해주세요" />}
+      {emojiOpen && (
+        <>
+          <EmojipickerBox>
+            <EmojiPicker onEmojiClick={handleEmojiSelect} />
+          </EmojipickerBox>
+          <Overlay onClose={handleEmojiOpen} />
+        </>
+      )}
+    </>
+  );
+};
+
+const PrevCategories = () => {
+  return (
+    <>
+      <PrevCategoryTitle>
+        <span>기존 카테고리</span>
+      </PrevCategoryTitle>
+
+      <PrevCategoryViewBox>
+        <CategoryView />
+      </PrevCategoryViewBox>
+    </>
+  );
+};
+
+const CategoryUpdateLayout = styled.div`
   ${fullSize};
   ${flexColumn};
   box-sizing: border-box;
   padding: 1rem 2rem 2rem 2rem;
 `;
 
-const PrevWrapper = styled.div`
-  width: 10%;
-  height: 8%;
-  margin-left: -0.75rem;
-  margin-top: -0.5rem;
+export const PrevBox = styled.div`
+  width: 80%;
+  height: 10%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 5vh;
   cursor: pointer;
-
-  @media screen and (min-width: 1000px) {
-    margin-left: -4rem;
-  }
 `;
 
 const HeaderTitle = styled.div`
@@ -69,7 +164,7 @@ const SetIcon = styled.div`
   font-size: ${({ theme }) => theme.fontsize.md};
 `;
 
-const EmojipickerWrapper = styled.div`
+const EmojipickerBox = styled.div`
   position: absolute;
   z-index: 1;
   bottom: 0;
@@ -88,92 +183,7 @@ const PrevCategoryTitle = styled.div`
   }
 `;
 
-const CategoryViewWrapper = styled.div`
+const PrevCategoryViewBox = styled.div`
   width: 100%;
   height: 60%;
 `;
-
-const CategoryUpdate = (props) => {
-  const addCategory = useSetRecoilState(currentCategoriesAtom);
-  const [emojiOpen, setEmojiOpen] = useState(false);
-  const [nameError, setNameError] = useState(false);
-  const [icon, setIcon] = useState("😀");
-  const newCategoryNameRef = useRef("");
-
-  const emojiHandler = () => {
-    setEmojiOpen((prev) => !prev);
-  };
-  const clickEmojiHandler = (emoji) => {
-    setIcon(emoji.emoji);
-    emojiHandler();
-  };
-  const onAddCategory = () => {
-    if (newCategoryNameRef.current.value == "") {
-      setNameError(true);
-      return;
-    }
-    addCategory((prev) => [
-      ...prev,
-      {
-        icon: icon,
-        text: newCategoryNameRef.current.value,
-      },
-    ]);
-    newCategoryNameRef.current.value = "";
-  };
-  const handleNameError = () => {
-    const newCategoryNameValue = newCategoryNameRef.current.value;
-    if (newCategoryNameValue == "" || newCategoryNameValue == undefined)
-      setNameError(true);
-    else setNameError(false);
-  };
-
-  return (
-    <CategoryUpdateWrapper>
-      <PrevWrapper onClick={props.onAddCate}>
-        <PrevIcon />
-      </PrevWrapper>
-
-      <HeaderTitle>
-        <span>카테고리</span>
-        <span>카테고리를 추가하거나 수정할 수 있어요</span>
-      </HeaderTitle>
-
-      <AddCategoryInput>
-        <SetIcon onClick={emojiHandler}>{icon}</SetIcon>
-
-        <StyledInput
-          width="12rem"
-          placeholder="이름을 입력해주세요"
-          inputRef={newCategoryNameRef}
-          borderStyle="1px solid lightgray"
-          onBlur={handleNameError}
-        />
-        <StyledButton onClick={onAddCategory} height="2.5rem">
-          추가하기
-        </StyledButton>
-      </AddCategoryInput>
-
-      {nameError && <ErrorInform text="카테고리 이름을 입력해주세요" />}
-
-      <PrevCategoryTitle>
-        <span>기존 카테고리</span>
-      </PrevCategoryTitle>
-
-      <CategoryViewWrapper>
-        <CategoryView />
-      </CategoryViewWrapper>
-
-      {emojiOpen && (
-        <>
-          <EmojipickerWrapper>
-            <EmojiPicker onEmojiClick={clickEmojiHandler} />
-          </EmojipickerWrapper>
-          <Overlay onClose={emojiHandler} />
-        </>
-      )}
-    </CategoryUpdateWrapper>
-  );
-};
-
-export default CategoryUpdate;

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import ApexCharts from "react-apexcharts";
 import useMonthStatistics from "../../hooks/useMonthStatistics";
+import utils from "../../utils/utils";
 
 export default function CostChart({ currentYear }) {
   const { series } = useMonthStatistics({ currentYear });
-
+  const { costFormatter } = utils();
   const [chartWidth, setChartWidth] = useState(window.innerWidth > 600 ? 600 : 300);
 
   useEffect(() => {
@@ -56,10 +57,7 @@ export default function CostChart({ currentYear }) {
         tooltip: {
           y: {
             formatter: function (y) {
-              if (typeof y !== undefined) {
-                return y.toFixed(0) + "원";
-              }
-              return y;
+              return costFormatter(y) + "원";
             },
           },
         },

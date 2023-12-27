@@ -8,7 +8,7 @@ import CategoryChart from "../components/statistics/CategoryChart";
 import CostChart from "../components/statistics/CostChart";
 import useAddHistory from "../hooks/useAddHistory";
 import useCurrentMonthDatas from "../hooks/useCurrentMonthDatas";
-import { flexCenter, flexColumn } from "../styled/styled";
+import { flexCenter, flexColumn, fullScreen } from "../styled/styled";
 
 export default function Statistics() {
   const { open, handleToggle, openItems } = useAddHistory();
@@ -66,6 +66,7 @@ const Main = () => {
 
 const StatisticsLayout = styled.div`
   position: relative;
+  ${fullScreen};
   ${flexColumn};
 `;
 

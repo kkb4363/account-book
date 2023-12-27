@@ -1,24 +1,45 @@
 import { MdModeEditOutline } from "react-icons/md";
 import styled from "styled-components";
-import PrevIcon from "../common/PrevIcon";
-import CategoryView from "./CategoryView";
 import { flexColumn, fullSize } from "../../styled/styled";
+import PrevIcon from "../common/PrevIcon";
+import { PrevBox } from "./CategoryUpdate";
+import CategoryView from "./CategoryView";
 
-const CategorySelectWrapper = styled.div`
+const CategorySelect = (props) => {
+  return (
+    <CategorySelectLayout>
+      <PrevBox onClick={props.onCategory}>
+        <PrevIcon dark />
+      </PrevBox>
+
+      <Header>
+        <HeaderTitle>
+          <span>카테고리 변경</span>
+          <span>변경할 카테고리를 선택해주세요</span>
+        </HeaderTitle>
+
+        <EditBox>
+          <span onClick={props.onAddCate}>
+            <MdModeEditOutline />
+          </span>
+        </EditBox>
+      </Header>
+
+      <CategoryView onClick={props.onCategory} />
+    </CategorySelectLayout>
+  );
+};
+
+export default CategorySelect;
+
+const CategorySelectLayout = styled.div`
   ${fullSize};
   ${flexColumn};
   box-sizing: border-box;
   padding: 1.25rem;
 `;
 
-const PrevWrapper = styled.div`
-  width: 5%;
-  height: 10%;
-  margin-bottom: 2rem;
-  cursor: pointer;
-`;
-
-const CategorySelectHeader = styled.div`
+const Header = styled.div`
   width: 100%;
   height: 17%;
   display: flex;
@@ -44,7 +65,7 @@ const HeaderTitle = styled.div`
   }
 `;
 
-const HeaderUpdateCategory = styled.div`
+const EditBox = styled.div`
   width: 10%;
   height: 100%;
   ${flexColumn};
@@ -57,29 +78,3 @@ const HeaderUpdateCategory = styled.div`
     cursor: pointer;
   }
 `;
-const CategorySelect = (props) => {
-  return (
-    <CategorySelectWrapper>
-      <PrevWrapper onClick={props.onCategory}>
-        <PrevIcon />
-      </PrevWrapper>
-
-      <CategorySelectHeader>
-        <HeaderTitle>
-          <span>카테고리 변경</span>
-          <span>변경할 카테고리를 선택해주세요</span>
-        </HeaderTitle>
-
-        <HeaderUpdateCategory>
-          <span onClick={props.onAddCate}>
-            <MdModeEditOutline />
-          </span>
-        </HeaderUpdateCategory>
-      </CategorySelectHeader>
-
-      <CategoryView onClick={props.onCategory} />
-    </CategorySelectWrapper>
-  );
-};
-
-export default CategorySelect;

@@ -2,10 +2,11 @@ import ApexCharts from "react-apexcharts";
 import styled from "styled-components";
 import { flexCenter } from "../../styled/styled";
 import useCategoryStatistics from "../../hooks/useCategoryStatistics";
+import utils from "../../utils/utils";
 
 export default function CategoryChart({ currentMonthDatas }) {
   const { labels, series } = useCategoryStatistics({ history: currentMonthDatas });
-
+  const { costFormatter } = utils();
   return (
     <>
       {labels.length !== 0 ? (
@@ -29,6 +30,13 @@ export default function CategoryChart({ currentMonthDatas }) {
             },
             chart: {
               toolbar: { show: false, type: "donut" },
+            },
+            yaxis: {
+              labels: {
+                formatter: function (val) {
+                  return costFormatter(val) + "원";
+                },
+              },
             },
             labels: labels,
           }}
