@@ -14,6 +14,7 @@ export default function HistoryHeader(props) {
       <HistoryHeaderLayout>
         <PrevIcon onClick={() => navigate("/")} />
         <MenubarIcon handleToggle={props.handleAdd} />
+        <span>{props.current.year}</span>
         <DateRow>
           <span>{props.prevMonth}</span>
           <span onClick={props.handleMonthPrev}>
@@ -62,6 +63,12 @@ const HistoryHeaderLayout = styled.div`
     top: 0;
     bottom: 0;
 
+    color: white;
+  }
+
+  & > span {
+    position: absolute;
+    left: 6vw;
     color: white;
   }
 `;
