@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
-import Overlay from "./Overlay";
 import { flexColumn } from "../../styled/styled";
+import Overlay from "./Overlay";
 
 const MenuNavbar = (props) => {
   const navi = useNavigate();
@@ -16,13 +16,14 @@ const MenuNavbar = (props) => {
       onclick: () => navi("/statistics"),
     },
   ];
+
   return (
     <>
       <MenuNavbarLayout>
         {navItems.map((item, idx) => (
-          <MenuNavbarItem onClick={item.onclick} key={"menunavbarkey=" + idx}>
+          <ItemsCol onClick={item.onclick} key={idx}>
             {item.text}
-          </MenuNavbarItem>
+          </ItemsCol>
         ))}
       </MenuNavbarLayout>
       <Overlay onClose={props.onClose} />
@@ -57,7 +58,7 @@ const MenuNavbarLayout = styled.div`
   border-bottom-left-radius: 20px;
 `;
 
-const MenuNavbarItem = styled.div`
+const ItemsCol = styled.div`
   margin: 1.5rem 0;
   padding: 0.5rem;
   border-radius: 0.5rem;

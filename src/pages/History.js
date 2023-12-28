@@ -2,20 +2,33 @@ import React, { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { keyframes, styled } from "styled-components";
 import { currentCategoryAtom } from "../atoms/CategoryAtom";
-import CategorySelect from "../components/category/CategorySelect";
-import CategoryUpdate from "../components/category/CategoryUpdate";
 import PlusIcon from "../components/common/PlusIcon";
 import HistoryItem from "../components/history/HistoryItem";
-import HistoryUpdate from "../components/history/HistoryUpdate";
-import HistoryHeader from "../components/history/header/Header";
-import MotionInputs from "../components/motion/MotionInput";
+import Header from "../components/history/header/Header";
 import useAddHistory from "../hooks/useAddHistory";
 import useCurrentMonthDatas from "../hooks/useCurrentMonthDatas";
-import UseHandler from "../hooks/useHandler";
 import { flexColumn, fullScreen } from "../styled/styled";
 
 const History = () => {
-  const { open: openAdd, handleToggle: handleAdd, openItems } = useAddHistory();
+  const setCurrentCategory = useSetRecoilState(currentCategoryAtom);
+  const [editId, setEditId] = useState("");
+
+  const handleEditOpen = (sid) => {
+    handleToggle("edit");
+    setEditId(sid);
+  };
+
+  const handleEditClose = () => {
+    setCurrentCategory({
+      icons: "",
+      text: "",
+    });
+    setEditId("");
+    handleToggle("edit");
+  };
+
+  const { open, handleToggle, openItems } = useAddHistory(editId, handleEditClose);
+
   const {
     current,
     setCurrent,
@@ -25,33 +38,6 @@ const History = () => {
     handleMonthPrev,
     handleMonthNext,
   } = useCurrentMonthDatas();
-  const fields = ["category", "addCategory"];
-  const [open, closeAll, handleToggle] = UseHandler(fields);
-  const setCurrentCategory = useSetRecoilState(currentCategoryAtom);
-  const [edit, setEdit] = useState({
-    open: false,
-    id: "",
-  });
-
-  const handleEditOpen = (sid) => {
-    setEdit({
-      open: true,
-      id: sid,
-    });
-  };
-
-  const handleEditClose = () => {
-    setEdit({
-      open: false,
-      id: "",
-    });
-    setCurrentCategory({
-      icons: "",
-      text: "",
-    });
-  };
-
-  const handleCategoryOpen = () => handleToggle("category");
 
   const headerProps = {
     current,
@@ -65,43 +51,16 @@ const History = () => {
 
   return (
     <HistoryLayout>
-      <HistoryHeader {...headerProps} handleAdd={handleAdd} />
+      <Header {...headerProps} handleAdd={handleToggle} />
       <Body
-        handleAdd={handleAdd}
+        handleToggle={handleToggle}
         currentMonthDatas={currentMonthDatas}
         handleEditOpen={handleEditOpen}
       />
 
       {openItems.map(
         (item, idx) =>
-          openAdd[item.condition] && (
-            <React.Fragment key={idx}>{item.data}</React.Fragment>
-          )
-      )}
-
-      {edit.open && (
-        <MotionInputs height="30vh" onClose={handleEditClose}>
-          <HistoryUpdate
-            selectedId={edit.id}
-            onClose={handleEditClose}
-            onCate={handleCategoryOpen}
-          />
-        </MotionInputs>
-      )}
-
-      {open.category && (
-        <MotionInputs onClose={closeAll}>
-          <CategorySelect
-            onCategory={handleCategoryOpen}
-            onAddCate={() => handleToggle("addCategory")}
-          />
-        </MotionInputs>
-      )}
-
-      {open.addCategory && (
-        <MotionInputs height="70vh" onClose={closeAll}>
-          <CategoryUpdate onAddCate={() => handleToggle("addCategory")} />
-        </MotionInputs>
+          open[item.condition] && <React.Fragment key={idx}>{item.data}</React.Fragment>
       )}
     </HistoryLayout>
   );
@@ -109,7 +68,7 @@ const History = () => {
 
 export default History;
 
-const Body = ({ handleAdd, currentMonthDatas, handleEditOpen }) => {
+const Body = ({ handleToggle, currentMonthDatas, handleEditOpen }) => {
   const groupedData = currentMonthDatas.reduce((groups, item) => {
     const date = new Date(item.date);
     const day = date.getDate();
@@ -147,9 +106,9 @@ const Body = ({ handleAdd, currentMonthDatas, handleEditOpen }) => {
     ));
   return (
     <>
-      <HistoryTitle>최근 내역</HistoryTitle>
-      <HistoryCurrentCol>{result}</HistoryCurrentCol>
-      <PlusIcon onClick={() => handleAdd("addMoney")} />
+      <Title>최근 내역</Title>
+      <ResultsCol>{result}</ResultsCol>
+      <PlusIcon onClick={() => handleToggle("addMoney")} />
     </>
   );
 };
@@ -169,7 +128,7 @@ const HistoryLayout = styled.div`
   animation: ${HistoryKeyframes} 0.5s ease-in-out;
 `;
 
-const HistoryCurrentCol = styled.div`
+const ResultsCol = styled.div`
   width: 100%;
   height: 60%;
   ${flexColumn};
@@ -182,7 +141,7 @@ const HistoryCurrentCol = styled.div`
   }
 `;
 
-const HistoryTitle = styled.span`
+const Title = styled.span`
   width: 100%;
   height: 10%;
   display: flex;

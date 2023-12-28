@@ -19,7 +19,7 @@ const AddHistory = (props) => {
   const moneyRef = useRef("");
   const navi = useNavigate();
 
-  const onAddHistory = async () => {
+  const handleHistoryAdd = async () => {
     if (selectedDateRef?.current?.value == "" || moneyRef.current.value == "") return;
     setHistory((prev) => [
       ...prev,
@@ -90,17 +90,17 @@ const AddHistory = (props) => {
     },
   ];
   return (
-    <MainInputsWrapper>
-      <MainInputsTitle>
+    <HistoryAddLayout>
+      <TitleCol>
         <span>내역 추가</span>
         <span>내역을 추가해주세요</span>
-      </MainInputsTitle>
+      </TitleCol>
 
       {inputItems.map((item, idx) => (
         <InputBox key={"inputwrapperkey" + idx}>{item.item}</InputBox>
       ))}
 
-      <MainInputsBtnWrapper>
+      <ButtonsRow>
         <StyledButton
           onClick={props.onClose}
           width="8rem"
@@ -110,17 +110,17 @@ const AddHistory = (props) => {
         >
           취소
         </StyledButton>
-        <StyledButton onClick={onAddHistory} width="8rem" height="3rem">
+        <StyledButton onClick={handleHistoryAdd} width="8rem" height="3rem">
           완료
         </StyledButton>
-      </MainInputsBtnWrapper>
-    </MainInputsWrapper>
+      </ButtonsRow>
+    </HistoryAddLayout>
   );
 };
 
 export default AddHistory;
 
-const MainInputsWrapper = styled.div`
+const HistoryAddLayout = styled.div`
   ${fullSize};
   ${flexColumn};
   box-sizing: border-box;
@@ -128,7 +128,7 @@ const MainInputsWrapper = styled.div`
   gap: 1rem;
 `;
 
-const MainInputsTitle = styled.div`
+const TitleCol = styled.div`
   ${flexColumn};
   gap: 0.25rem;
   margin-bottom: 20px;
@@ -181,7 +181,7 @@ const InputCol = styled.div`
   }
 `;
 
-const MainInputsBtnWrapper = styled.div`
+const ButtonsRow = styled.div`
   width: 100%;
   height: 25%;
   display: flex;

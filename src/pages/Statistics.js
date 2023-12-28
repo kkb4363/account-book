@@ -47,17 +47,17 @@ const Main = () => {
     <MainLayout>
       <div>
         <span>카테고리별</span>
-        <MainDate>
+        <Date>
           <AiOutlineLeft size={18} onClick={handleMonthPrev} />
           {current.year}년 {current.month}월
           <AiOutlineRight size={18} onClick={handleMonthNext} />
-        </MainDate>
+        </Date>
         <CategoryChart currentMonthDatas={currentMonthDatas} />
       </div>
 
       <div>
         <span>월별</span>
-        <MainDate>{current.year}년</MainDate>
+        <Date>{current.year}년</Date>
         <CostChart currentYear={current.year} />
       </div>
     </MainLayout>
@@ -121,7 +121,7 @@ const MainLayout = styled.div`
   }
 `;
 
-const MainDate = styled.div`
+const Date = styled.div`
   ${flexCenter};
   gap: 20px;
   cursor: pointer;

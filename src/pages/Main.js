@@ -1,13 +1,12 @@
 import React from "react";
-import { GiHamburgerMenu } from "react-icons/gi";
 import { styled } from "styled-components";
+import MenubarIcon from "../components/common/MenubarIcon";
 import PlusIcon from "../components/common/PlusIcon";
 import ImgSlide from "../components/main/ImgSlide";
 import useAddHistory from "../hooks/useAddHistory";
 import { flexCenter, flexColumn, fullScreen } from "../styled/styled";
-import MenubarIcon from "../components/common/MenubarIcon";
 
-const mainText = [
+const texts = [
   {
     title: "GABook",
   },
@@ -33,11 +32,11 @@ const Main = () => {
 
       <ImgSlide />
 
-      <MainText>
-        {mainText.map((item, idx) => (
+      <BodyTextBox>
+        {texts.map((item, idx) => (
           <span key={"maintextkey=" + idx}>{item.title}</span>
         ))}
-      </MainText>
+      </BodyTextBox>
 
       <PlusIcon onClick={() => handleToggle("addMoney")} />
 
@@ -53,6 +52,12 @@ const Main = () => {
 
 export default Main;
 
+const MainLayout = styled.div`
+  ${fullScreen};
+  ${flexColumn};
+  position: relative;
+`;
+
 const Head = styled.div`
   width: inherit;
   height: 10vh;
@@ -65,13 +70,7 @@ const Head = styled.div`
   }
 `;
 
-const MainLayout = styled.div`
-  ${fullScreen};
-  ${flexColumn};
-  position: relative;
-`;
-
-const MainText = styled.div`
+const BodyTextBox = styled.div`
   width: 50%;
   @media screen and (max-width: 500px) {
     width: 100%;

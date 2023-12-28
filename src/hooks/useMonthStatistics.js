@@ -5,7 +5,7 @@ export default function useMonthStatistics({ currentYear }) {
   const history = useRecoilValue(historyAtom);
 
   const monthlyData = {};
-
+  console.log(currentYear);
   history.forEach((entry) => {
     if (currentYear + "" == entry.date.substring(0, 4)) {
       const month = entry.date.substring(0, 7);
@@ -23,7 +23,7 @@ export default function useMonthStatistics({ currentYear }) {
 
   for (let i = 1; i <= 12; i++) {
     const month = i < 10 ? `0${i}` : `${i}`;
-    const totalCost = monthlyData[`2023-${month}`] || 0;
+    const totalCost = monthlyData[`${currentYear}-${month}`] || 0;
 
     series.push(totalCost);
   }

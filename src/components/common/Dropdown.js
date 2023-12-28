@@ -1,6 +1,29 @@
 import styled, { keyframes } from "styled-components";
 import { flexCenter } from "../../styled/styled";
 
+const Dropdown = (props) => {
+  const dropdownItems = [
+    {
+      iname: "지출",
+    },
+    {
+      iname: "수입",
+    },
+  ];
+
+  return (
+    <DropdownLayout>
+      {dropdownItems.map((item) => (
+        <button key={item.iname} name={item.iname} onClick={props.onHandle}>
+          {item.iname}
+        </button>
+      ))}
+    </DropdownLayout>
+  );
+};
+
+export default Dropdown;
+
 const dropdown_keyframes = keyframes`
     from{
         transform:translateY(-50px);
@@ -12,7 +35,7 @@ const dropdown_keyframes = keyframes`
     }
 `;
 
-const DropdownWrapper = styled.div`
+const DropdownLayout = styled.div`
   width: 6rem;
   height: 6rem;
   ${flexCenter};
@@ -38,26 +61,3 @@ const DropdownWrapper = styled.div`
     color: rgb(0, 0, 0, 0.6);
   }
 `;
-
-const Dropdown = (props) => {
-  const dropdownItems = [
-    {
-      iname: "지출",
-    },
-    {
-      iname: "수입",
-    },
-  ];
-
-  return (
-    <DropdownWrapper>
-      {dropdownItems.map((item) => (
-        <button key={item.iname} name={item.iname} onClick={props.onHandle}>
-          {item.iname}
-        </button>
-      ))}
-    </DropdownWrapper>
-  );
-};
-
-export default Dropdown;

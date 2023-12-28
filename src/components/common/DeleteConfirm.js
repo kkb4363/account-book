@@ -1,9 +1,9 @@
-import styled from 'styled-components';
-import { flexColumn } from '../../styled/styled';
-import StyledButton from '../button/StyledButton';
-import Overlay from './Overlay';
+import styled from "styled-components";
+import { flexColumn } from "../../styled/styled";
+import StyledButton from "../button/StyledButton";
+import Overlay from "./Overlay";
 
-const DeleteConfirmWrapper = styled.div`
+const DeleteConfirmLayout = styled.div`
   width: 12rem;
   height: 8rem;
   ${flexColumn};
@@ -26,7 +26,7 @@ const DeleteConfirmWrapper = styled.div`
   }
 `;
 
-const ButtonWrapper = styled.div`
+const ButtonsRow = styled.div`
   width: 100%;
   height: 50%;
 
@@ -38,32 +38,32 @@ const ButtonWrapper = styled.div`
 const DeleteConfirm = (props) => {
   const buttonItems = [
     {
-      text: '네',
+      text: "네",
       onClick: props.onDelete,
     },
     {
-      text: '아니요',
+      text: "아니요",
       onClick: props.onCancel,
     },
   ];
 
   return (
     <>
-      <DeleteConfirmWrapper>
+      <DeleteConfirmLayout>
         <span>정말 삭제하시겠습니까?</span>
-        <ButtonWrapper>
+        <ButtonsRow>
           {buttonItems.map((item) => (
             <StyledButton
               key={item.text}
               onClick={item.onClick}
-              width={'40%'}
-              height={'50%'}
+              width={"40%"}
+              height={"50%"}
             >
               {item.text}
             </StyledButton>
           ))}
-        </ButtonWrapper>
-      </DeleteConfirmWrapper>
+        </ButtonsRow>
+      </DeleteConfirmLayout>
       <Overlay onClose={props.onClose} />
     </>
   );

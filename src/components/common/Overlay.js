@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { fullScreen } from "../../styled/styled";
 
-const OverlayWrapper = styled.div`
+const OverlayLayout = styled.div`
   ${fullScreen};
   height: 100%;
   position: absolute;
@@ -10,7 +10,7 @@ const OverlayWrapper = styled.div`
 `;
 
 const Overlay = (props) => {
-  return <OverlayWrapper onClick={props.onClose} />;
+  return <OverlayLayout onClick={props.onClose} />;
 };
 
 export default Overlay;

@@ -8,7 +8,54 @@ import { flexCenter, flexColumn } from "../../styled/styled";
 import DeleteConfirm from "../common/DeleteConfirm";
 import utils from "../../utils/utils";
 
-const HistoryItemWrapper = styled.div`
+const HistoryItem = (props) => {
+  const [history, setHistory] = useRecoilState(historyAtom);
+  const { costFormatter } = utils();
+  const [openDelete, setOpenDelete] = useState(false);
+  const isExpenses = props?.type == "지출";
+  const cost = isExpenses
+    ? "-" + costFormatter(props?.cost)
+    : "+" + costFormatter(props?.cost);
+
+  const handleDelete = () => setOpenDelete((prev) => !prev);
+
+  const onDelete = () => {
+    const newDatas = history?.filter((his) => his?.id != props.id);
+    setHistory(newDatas);
+    setOpenDelete(false);
+  };
+  return (
+    <HistoryItemLayout>
+      <HistoryIconWrapper>
+        <HistoryIcon>{props.cate?.icons}</HistoryIcon>
+        <span>{props.cate?.text}</span>
+      </HistoryIconWrapper>
+
+      <HistoryCost $isExpenses={isExpenses}>
+        <p>{cost}원</p>
+        <span>{props?.detail}</span>
+      </HistoryCost>
+
+      <EditIcon onClick={() => props.onEdit(props.id)}>
+        <GiHamburgerMenu />
+      </EditIcon>
+
+      <AiFillDelete style={{ cursor: "pointer" }} onClick={handleDelete} />
+
+      {openDelete && (
+        <DeleteConfirm
+          onDelete={onDelete}
+          onCancel={handleDelete}
+          onClose={handleDelete}
+        />
+      )}
+    </HistoryItemLayout>
+  );
+};
+
+export default HistoryItem;
+
+const HistoryItemLayout = styled.div`
   width: 100%;
   height: 20%;
   display: flex;
@@ -72,50 +119,3 @@ const EditIcon = styled.div`
 
   font-size: ${({ theme }) => theme.fontsize.xs};
 `;
-
-const HistoryItem = (props) => {
-  const [history, setHistory] = useRecoilState(historyAtom);
-  const { costFormatter } = utils();
-  const [openDelete, setOpenDelete] = useState(false);
-  const isExpenses = props?.type == "지출";
-  const cost = isExpenses
-    ? "-" + costFormatter(props?.cost)
-    : "+" + costFormatter(props?.cost);
-
-  const handleDelete = () => setOpenDelete((prev) => !prev);
-
-  const onDelete = () => {
-    const newDatas = history?.filter((his) => his?.id != props.id);
-    setHistory(newDatas);
-    setOpenDelete(false);
-  };
-  return (
-    <HistoryItemWrapper>
-      <HistoryIconWrapper>
-        <HistoryIcon>{props.cate?.icons}</HistoryIcon>
-        <span>{props.cate?.text}</span>
-      </HistoryIconWrapper>
-
-      <HistoryCost $isExpenses={isExpenses}>
-        <p>{cost}원</p>
-        <span>{props?.detail}</span>
-      </HistoryCost>
-
-      <EditIcon onClick={() => props.onEdit(props.id)}>
-        <GiHamburgerMenu />
-      </EditIcon>
-
-      <AiFillDelete style={{ cursor: "pointer" }} onClick={handleDelete} />
-
-      {openDelete && (
-        <DeleteConfirm
-          onDelete={onDelete}
-          onCancel={handleDelete}
-          onClose={handleDelete}
-        />
-      )}
-    </HistoryItemWrapper>
-  );
-};
-
-export default HistoryItem;

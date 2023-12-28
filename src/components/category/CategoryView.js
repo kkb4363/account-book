@@ -1,11 +1,73 @@
-import { useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import styled from 'styled-components';
-import { currentCategoriesAtom, currentCategoryAtom } from '../../atoms/CategoryAtom';
-import DeleteConfirm from '../common/DeleteConfirm';
-import { flexCenter, flexColumn, fullSize } from '../../styled/styled';
+import { useState } from "react";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import styled from "styled-components";
+import { currentCategoriesAtom, currentCategoryAtom } from "../../atoms/CategoryAtom";
+import DeleteConfirm from "../common/DeleteConfirm";
+import { flexCenter, flexColumn, fullSize } from "../../styled/styled";
 
-const CagegoryViewWrapper = styled.div`
+const CategoryView = (props) => {
+  const setCurrentCategory = useSetRecoilState(currentCategoryAtom);
+  const [currentCategories, setCurrentCategories] = useRecoilState(currentCategoriesAtom);
+  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
+  const [selectedIdx, setSelectedIdx] = useState("");
+  const isOnCategory = props.onClick != undefined;
+
+  const onSetCategory = (selectedIcon, selectedText) => {
+    setCurrentCategory({
+      icons: selectedIcon,
+      text: selectedText,
+    });
+    props.onClick();
+  };
+
+  const openDeleteConfirmHandler = (idx) => {
+    setOpenDeleteConfirm(true);
+    setSelectedIdx(idx);
+  };
+
+  const closeDeleteConfirmHandler = () => {
+    setOpenDeleteConfirm(false);
+    setSelectedIdx("");
+  };
+
+  const deleteCategory = () => {
+    const newCategories = [...currentCategories];
+    newCategories.splice(selectedIdx, 1);
+    setCurrentCategories(newCategories);
+    closeDeleteConfirmHandler();
+  };
+
+  return (
+    <CategoryViewLayout>
+      {currentCategories?.map((cate, idx) => (
+        <CateBox key={"currentcategories_key=" + idx}>
+          <CateIcon
+            onClick={
+              isOnCategory
+                ? () => onSetCategory(cate.icon, cate.text)
+                : () => openDeleteConfirmHandler(idx)
+            }
+          >
+            {cate.icon}
+          </CateIcon>
+          <span> {cate.text}</span>
+        </CateBox>
+      ))}
+
+      {openDeleteConfirm && (
+        <DeleteConfirm
+          onDelete={deleteCategory}
+          onCancel={closeDeleteConfirmHandler}
+          onClose={closeDeleteConfirmHandler}
+        />
+      )}
+    </CategoryViewLayout>
+  );
+};
+
+export default CategoryView;
+
+const CategoryViewLayout = styled.div`
   ${fullSize}
   display: grid;
   place-items: center;
@@ -21,7 +83,7 @@ const CagegoryViewWrapper = styled.div`
   }
 `;
 
-const CateWrapper = styled.div`
+const CateBox = styled.div`
   ${flexColumn};
   align-items: center;
   gap: 0.25rem;
@@ -46,65 +108,3 @@ const CateIcon = styled.div`
     height: 6vw;
   }
 `;
-
-const CategoryView = (props) => {
-  const setCurrentCategory = useSetRecoilState(currentCategoryAtom);
-  const [currentCategories, setCurrentCategories] = useRecoilState(currentCategoriesAtom);
-  const [openDeleteConfirm, setOpenDeleteConfirm] = useState(false);
-  const [selectedIdx, setSelectedIdx] = useState('');
-  const isOnCategory = props.onClick != undefined;
-
-  const onSetCategory = (selectedIcon, selectedText) => {
-    setCurrentCategory({
-      icons: selectedIcon,
-      text: selectedText,
-    });
-    props.onClick();
-  };
-
-  const openDeleteConfirmHandler = (idx) => {
-    setOpenDeleteConfirm(true);
-    setSelectedIdx(idx);
-  };
-
-  const closeDeleteConfirmHandler = () => {
-    setOpenDeleteConfirm(false);
-    setSelectedIdx('');
-  };
-
-  const deleteCategory = () => {
-    const newCategories = [...currentCategories];
-    newCategories.splice(selectedIdx, 1);
-    setCurrentCategories(newCategories);
-    closeDeleteConfirmHandler();
-  };
-
-  return (
-    <CagegoryViewWrapper>
-      {currentCategories?.map((cate, idx) => (
-        <CateWrapper key={'currentcategories_key=' + idx}>
-          <CateIcon
-            onClick={
-              isOnCategory
-                ? () => onSetCategory(cate.icon, cate.text)
-                : () => openDeleteConfirmHandler(idx)
-            }
-          >
-            {cate.icon}
-          </CateIcon>
-          <span> {cate.text}</span>
-        </CateWrapper>
-      ))}
-
-      {openDeleteConfirm && (
-        <DeleteConfirm
-          onDelete={deleteCategory}
-          onCancel={closeDeleteConfirmHandler}
-          onClose={closeDeleteConfirmHandler}
-        />
-      )}
-    </CagegoryViewWrapper>
-  );
-};
-
-export default CategoryView;
