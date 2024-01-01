@@ -5,11 +5,11 @@ export default function useMonthStatistics({ currentYear }) {
   const history = useRecoilValue(historyAtom);
 
   const monthlyData = {};
-  console.log(currentYear);
+
   history.forEach((entry) => {
-    if (currentYear + "" == entry.date.substring(0, 4)) {
+    if (currentYear + "" == entry.date.substring(0, 4) && entry.type == "지출") {
       const month = entry.date.substring(0, 7);
-      const cost = parseFloat(entry.cost.replace(",", ""));
+      const cost = parseFloat(entry.cost.replaceAll(",", ""));
 
       if (monthlyData[month]) {
         monthlyData[month] += cost;

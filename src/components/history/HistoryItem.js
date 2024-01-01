@@ -1,12 +1,13 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { historyAtom } from "../../atoms/HistoryAtom";
 import { flexCenter, flexColumn } from "../../styled/styled";
-import DeleteConfirm from "../common/DeleteConfirm";
 import utils from "../../utils/utils";
+import DeleteConfirm from "../common/DeleteConfirm";
 
 const HistoryItem = (props) => {
   const [history, setHistory] = useRecoilState(historyAtom);
@@ -24,23 +25,43 @@ const HistoryItem = (props) => {
     setHistory(newDatas);
     setOpenDelete(false);
   };
+
+  const [exchangeRate, setExchangeRate] = useState(0);
+  useEffect(() => {
+    axios
+      .get(
+        `https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/krw/${props.country}.min.json`
+      )
+      .then((res) => setExchangeRate(res.data[props.country]));
+  }, [props.country]);
+
+  const costWithoutComma = props.cost.toString().replace(/\D/g, "");
+
   return (
     <HistoryItemLayout>
-      <HistoryIconWrapper>
-        <HistoryIcon>{props.cate?.icons}</HistoryIcon>
-        <span>{props.cate?.text}</span>
-      </HistoryIconWrapper>
+      <IconAndCostBox>
+        <HistoryIconWrapper>
+          <HistoryIcon>{props.cate?.icons}</HistoryIcon>
+          <span>{props.cate?.text}</span>
+        </HistoryIconWrapper>
 
-      <HistoryCost $isExpenses={isExpenses}>
-        <p>{cost}원</p>
-        <span>{props?.detail}</span>
-      </HistoryCost>
+        <HistoryCost $isExpenses={isExpenses}>
+          <p>{cost}원</p>
+          <span>{props?.detail}</span>
+        </HistoryCost>
+      </IconAndCostBox>
+
+      <ExchangeBox>
+        {props.country}: {Number(exchangeRate.toFixed(4)) * Number(costWithoutComma)}
+      </ExchangeBox>
 
       <EditIcon onClick={() => props.onEdit(props.id)}>
         <GiHamburgerMenu />
       </EditIcon>
 
-      <AiFillDelete style={{ cursor: "pointer" }} onClick={handleDelete} />
+      <EditIcon onClick={handleDelete}>
+        <AiFillDelete />
+      </EditIcon>
 
       {openDelete && (
         <DeleteConfirm
@@ -61,6 +82,13 @@ const HistoryItemLayout = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+`;
+
+const IconAndCostBox = styled.div`
+  display: flex;
+
+  width: 40%;
+  height: 100%;
 `;
 
 export const HistoryIconWrapper = styled.div`
@@ -111,11 +139,22 @@ export const HistoryCost = styled.div`
   }
 `;
 
+const ExchangeBox = styled.div`
+  width: 40%;
+  height: 100%;
+  ${flexColumn};
+  justify-content: center;
+`;
+
 const EditIcon = styled.div`
   width: 5%;
   height: 100%;
   ${flexCenter};
   cursor: pointer;
+
+  &:hover {
+    color: gray;
+  }
 
   font-size: ${({ theme }) => theme.fontsize.xs};
 `;

@@ -7,9 +7,36 @@ import HistoryItem from "../components/history/HistoryItem";
 import Header from "../components/history/header/Header";
 import useAddHistory from "../hooks/useAddHistory";
 import useCurrentMonthDatas from "../hooks/useCurrentMonthDatas";
-import { flexColumn, fullScreen } from "../styled/styled";
+import { flexCenter, flexColumn, fullScreen } from "../styled/styled";
 
-const History = () => {
+const countries = [
+  {
+    name: "eur",
+    korName: "EUR / 유럽",
+  },
+  {
+    name: "usd",
+    korName: "USD / 미국",
+  },
+  {
+    name: "gbp",
+    korName: "GBP / 영국",
+  },
+  {
+    name: "brl",
+    korName: "BRL / 브라질",
+  },
+  {
+    name: "hkd",
+    korName: "HKD / 홍콩",
+  },
+  {
+    name: "jpy",
+    korName: "JPY / 일본",
+  },
+];
+
+export default function History() {
   const setCurrentCategory = useSetRecoilState(currentCategoryAtom);
   const [editId, setEditId] = useState("");
 
@@ -64,11 +91,14 @@ const History = () => {
       )}
     </HistoryLayout>
   );
-};
-
-export default History;
+}
 
 const Body = ({ handleToggle, currentMonthDatas, handleEditOpen }) => {
+  const [country, setCountry] = useState("eur");
+  const handleCountrySelect = (e) => {
+    setCountry(e.target.value);
+  };
+
   const groupedData = currentMonthDatas.reduce((groups, item) => {
     const date = new Date(item.date);
     const day = date.getDate();
@@ -91,22 +121,36 @@ const Body = ({ handleToggle, currentMonthDatas, handleEditOpen }) => {
     .map(({ day, data }) => (
       <>
         <span style={{ fontSize: "1rem", color: "rgb(0,0,0,0.7)" }}>{day}일</span>
-        {data.map((his) => (
+        {data.map((his, idx) => (
           <HistoryItem
-            key={Date.now()}
+            key={idx}
             cost={his.cost}
             cate={his.category}
             detail={his.detail}
             type={his.type}
             id={his.id}
             onEdit={handleEditOpen}
+            country={country}
           />
         ))}
       </>
     ));
+
   return (
     <>
-      <Title>최근 내역</Title>
+      <Title>
+        최근 내역
+        <div>
+          환율 보기 :
+          <Select value={country} onChange={handleCountrySelect}>
+            {countries.map((item) => (
+              <option value={item.name} key={item.name}>
+                {item.korName}
+              </option>
+            ))}
+          </Select>
+        </div>
+      </Title>
       <ResultsCol>{result}</ResultsCol>
       <PlusIcon onClick={() => handleToggle("addMoney")} />
     </>
@@ -146,9 +190,24 @@ const Title = styled.span`
   height: 10%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   box-sizing: border-box;
-  padding-left: 1.5rem;
+  padding: 0 1.5rem;
 
   font-size: ${({ theme }) => theme.fontsize.xxxl};
   font-weight: ${({ theme }) => theme.weight.lg};
+
+  div {
+    height: 100%;
+    ${flexCenter};
+  }
+`;
+
+const Select = styled.select`
+  height: 40%;
+  width: 150px;
+  margin-left: 10px;
+
+  font-size: 20px;
+  font-weight: 600;
 `;

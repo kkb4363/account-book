@@ -8,7 +8,6 @@ import MenubarIcon from "../../common/MenubarIcon";
 export default function HistoryHeader(props) {
   const navigate = useNavigate();
   const currentDate = props.current.year + "" + props.current.month;
-
   return (
     <>
       <HistoryHeaderLayout>
@@ -74,19 +73,19 @@ const HistoryHeaderLayout = styled.div`
 `;
 
 const DateRow = styled.div`
-  width: 100%;
+  width: 80%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-around;
+  margin: 0 auto;
 
   font-size: 2rem;
   font-weight: ${({ theme }) => theme.weight.lg};
   color: gray;
 
-  @media screen and (max-width: 500px) {
-    justify-content: center;
-    gap: 20px;
+  @media screen and (max-width: 700px) {
+    width: 80%;
     font-size: 1.5rem;
   }
 
@@ -97,10 +96,5 @@ const DateRow = styled.div`
   span:nth-child(2),
   span:nth-child(4) {
     cursor: pointer;
-  }
-
-  @media screen and (min-width: 1000px) {
-    margin: 0 auto;
-    width: 50%;
   }
 `;
