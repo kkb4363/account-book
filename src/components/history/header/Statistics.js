@@ -37,13 +37,13 @@ export default function HistoryStatistics(props) {
 }
 
 const HistoryStatisticsRow = styled.div`
-  width: 100vw;
-  height: 5vh;
-  margin-top: 30px;
+  width: 100%;
+  height: 40%;
   display: flex;
   align-items: center;
   justify-content: space-around;
   background-color: white;
+  border: 1px solid white;
 
   @media screen and (max-width: 800px) {
     display: grid;

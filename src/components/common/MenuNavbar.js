@@ -53,9 +53,13 @@ const MenuNavbarLayout = styled.div`
   background: white;
   ${flexColumn};
   align-items: center;
-  animation: ${menunavbar_keyframes} 0.5s ease-in-out;
+  animation: ${menunavbar_keyframes} 0.2s ease-in-out;
   border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
+
+  @media screen and (max-width: 600px) {
+    width: 50%;
+  }
 `;
 
 const ItemsCol = styled.div`

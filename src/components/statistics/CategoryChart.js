@@ -1,6 +1,6 @@
 import ApexCharts from "react-apexcharts";
 import styled from "styled-components";
-import { flexCenter } from "../../styled/styled";
+import { flexCenter, fullScreen } from "../../styled/styled";
 import useCategoryStatistics from "../../hooks/useCategoryStatistics";
 import utils from "../../utils/utils";
 

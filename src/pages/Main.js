@@ -56,6 +56,7 @@ const MainLayout = styled.div`
   ${fullScreen};
   ${flexColumn};
   position: relative;
+  overflow: hidden;
 `;
 
 const Head = styled.div`

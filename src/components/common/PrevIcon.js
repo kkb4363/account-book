@@ -2,10 +2,10 @@ import styled from "styled-components";
 import { BsChevronLeft } from "react-icons/bs";
 import { flexCenter, fullSize } from "../../styled/styled";
 
-const PrevIcon = ({ onClick, dark }) => {
+const PrevIcon = ({ onClick, dark, size }) => {
   return (
     <PrevIconLayout onClick={onClick} $dark={dark}>
-      <BsChevronLeft size={24} />
+      <BsChevronLeft size={size ? size : 24} />
     </PrevIconLayout>
   );
 };

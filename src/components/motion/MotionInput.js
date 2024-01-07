@@ -15,9 +15,11 @@ export default MotionInputs;
 
 const motionInput_keyframes = keyframes`
   from{
-    transform:translateY(400px);
+    opacity: 0.1;
+    transform:translateY(300px);
   }
   to{
+    opacity: 1;
     transform:translateY(0);
   }
 `;
@@ -32,7 +34,7 @@ const MotionInputLayout = styled.div`
   position: absolute;
   bottom: 0;
   z-index: 1;
-  animation: ${motionInput_keyframes} 0.5s ease-in-out;
+  animation: ${motionInput_keyframes} 0.2s linear;
 
   @media screen and (min-width: 1000px) {
     height: ${({ $height }) => ($height ? `calc(${$height} * 1.3)` : "calc(50vh * 1.3)")};

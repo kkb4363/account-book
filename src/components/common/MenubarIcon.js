@@ -2,10 +2,10 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import styled from "styled-components";
 import { flexCenter } from "../../styled/styled";
 
-export default function MenubarIcon({ handleToggle }) {
+export default function MenubarIcon({ handleToggle, size }) {
   return (
     <MenubarIconLayout onClick={() => handleToggle("menubar")}>
-      <GiHamburgerMenu size={24} />
+      <GiHamburgerMenu size={size ? size : 24} />
     </MenubarIconLayout>
   );
 }

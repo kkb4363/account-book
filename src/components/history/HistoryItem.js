@@ -28,11 +28,18 @@ const HistoryItem = (props) => {
 
   const [exchangeRate, setExchangeRate] = useState(0);
   useEffect(() => {
-    axios
-      .get(
-        `https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/krw/${props.country}.min.json`
-      )
-      .then((res) => setExchangeRate(res.data[props.country]));
+    let ignore = false;
+    if (!ignore) {
+      axios
+        .get(
+          `https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/krw/${props.country}.min.json`
+        )
+        .then((res) => setExchangeRate(res.data[props.country]));
+    }
+
+    return () => {
+      ignore = true;
+    };
   }, [props.country]);
 
   const costWithoutComma = props.cost.toString().replace(/\D/g, "");
@@ -52,7 +59,8 @@ const HistoryItem = (props) => {
       </IconAndCostBox>
 
       <ExchangeBox>
-        {props.country}: {Number(exchangeRate.toFixed(4)) * Number(costWithoutComma)}
+        {props.country}:{" "}
+        {(Number(exchangeRate.toFixed(4)) * Number(costWithoutComma)).toFixed(2)}
       </ExchangeBox>
 
       <EditIcon onClick={() => props.onEdit(props.id)}>
@@ -86,7 +94,7 @@ const HistoryItemLayout = styled.div`
 
 const IconAndCostBox = styled.div`
   display: flex;
-
+  gap: 20px;
   width: 40%;
   height: 100%;
 `;
@@ -129,6 +137,10 @@ export const HistoryCost = styled.div`
     color: ${(props) =>
       props.$isExpenses ? props.theme.colors.error : props.theme.colors.blue};
     font-size: ${({ theme }) => theme.fontsize.xxl};
+    @media screen and (max-width: 500px) {
+      font-size: 14px;
+    }
+
     font-weight: ${({ theme }) => theme.weight.lg};
     white-space: nowrap;
   }
@@ -136,14 +148,19 @@ export const HistoryCost = styled.div`
   span {
     font-size: ${({ theme }) => theme.fontsize.md};
     color: rgb(0, 0, 0, 0.5);
+    white-space: nowrap;
   }
 `;
 
 const ExchangeBox = styled.div`
-  width: 40%;
+  width: 25%;
   height: 100%;
   ${flexColumn};
   justify-content: center;
+  white-space: nowrap;
+  @media screen and (max-width: 500px) {
+    font-size: 12px;
+  }
 `;
 
 const EditIcon = styled.div`

@@ -71,8 +71,8 @@ const StatisticsLayout = styled.div`
 `;
 
 const HeaderLayout = styled.div`
-  width: 100vw;
-  height: 10vh;
+  width: 100%;
+  height: 10%;
   ${flexCenter};
   background-color: #3f3e3e;
 
@@ -96,11 +96,17 @@ const MainLayout = styled.div`
   width: 100%;
   height: 90%;
   ${flexCenter};
-  margin-top: 10vh;
+  box-sizing: border-box;
+  overflow: scroll;
 
   @media screen and (max-width: 960px) {
     flex-direction: column;
-    gap: 60px;
+    padding-top: 30vh;
+    & > div {
+      width: 100%;
+      height: 50%;
+      margin-top: 20%;
+    }
   }
 
   & > div {

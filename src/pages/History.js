@@ -84,7 +84,6 @@ export default function History() {
         currentMonthDatas={currentMonthDatas}
         handleEditOpen={handleEditOpen}
       />
-
       {openItems.map(
         (item, idx) =>
           open[item.condition] && <React.Fragment key={idx}>{item.data}</React.Fragment>
@@ -143,7 +142,7 @@ const Body = ({ handleToggle, currentMonthDatas, handleEditOpen }) => {
         <div>
           환율 보기 :
           <Select value={country} onChange={handleCountrySelect}>
-            {countries.map((item) => (
+            {countries.map((item, idx) => (
               <option value={item.name} key={item.name}>
                 {item.korName}
               </option>
@@ -167,7 +166,8 @@ const HistoryKeyframes = keyframes`
 `;
 
 const HistoryLayout = styled.div`
-  ${fullScreen};
+  width: 100%;
+  height: 100vh;
   ${flexColumn};
   animation: ${HistoryKeyframes} 0.5s ease-in-out;
 `;
@@ -195,7 +195,11 @@ const Title = styled.span`
   padding: 0 1.5rem;
 
   font-size: ${({ theme }) => theme.fontsize.xxxl};
+  @media screen and (max-width: 500px) {
+    font-size: ${({ theme }) => theme.fontsize.xl};
+  }
   font-weight: ${({ theme }) => theme.weight.lg};
+  white-space: nowrap;
 
   div {
     height: 100%;
@@ -210,4 +214,7 @@ const Select = styled.select`
 
   font-size: 20px;
   font-weight: 600;
+  @media screen and (max-width: 500px) {
+    font-size: ${({ theme }) => theme.fontsize.xl};
+  }
 `;

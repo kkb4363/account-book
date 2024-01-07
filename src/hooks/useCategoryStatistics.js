@@ -5,7 +5,7 @@ export default function useCategoryStatistics({ history }) {
     history.forEach((entry) => {
       if (entry.type == "지출") {
         const categoryText = entry.category.text;
-        const cost = parseFloat(entry.cost.replace(",", ""));
+        const cost = parseFloat(entry.cost.replaceAll(",", ""));
 
         if (categoriesMap.has(categoryText)) {
           categoriesMap.set(categoryText, categoriesMap.get(categoryText) + cost);
