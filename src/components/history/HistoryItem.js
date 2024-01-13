@@ -2,12 +2,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { AiFillDelete } from "react-icons/ai";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { historyAtom } from "../../atoms/HistoryAtom";
 import { flexCenter, flexColumn } from "../../styled/styled";
 import utils from "../../utils/utils";
 import DeleteConfirm from "../common/DeleteConfirm";
+import { totalStatusAtom } from "../../atoms/TotalStatusAtom";
 
 const HistoryItem = (props) => {
   const [history, setHistory] = useRecoilState(historyAtom);
@@ -20,7 +21,23 @@ const HistoryItem = (props) => {
 
   const handleDelete = () => setOpenDelete((prev) => !prev);
 
+  const setTotalStatus = useSetRecoilState(totalStatusAtom);
+
   const onDelete = () => {
+    const month = +history?.filter((his) => his?.id == props.id)[0].date.substr(5, 2) - 1;
+
+    const dateForTotalStatus =
+      history?.filter((his) => his?.id == props.id)[0].date.substr(0, 4) +
+      String(month).padStart(2, "0");
+
+    const isAddedTotal = history?.filter((his) => his?.id == props.id)[0].isTotal;
+
+    if (isAddedTotal)
+      setTotalStatus((prev) => ({
+        ...prev,
+        [dateForTotalStatus]: false,
+      }));
+
     const newDatas = history?.filter((his) => his?.id != props.id);
     setHistory(newDatas);
     setOpenDelete(false);

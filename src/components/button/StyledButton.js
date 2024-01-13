@@ -4,12 +4,14 @@ import { flexCenter } from "../../styled/styled";
 const StyledButton = (props) => {
   return (
     <ButtonLayout
+      disabled={props.disabled}
       onClick={props.onClick}
       $width={props.width}
       $height={props.height}
       $bgColor={props.bgColor}
       $color={props.color}
       $fontsize={props.fontsize}
+      $padding={props.padding}
     >
       {props.children}
     </ButtonLayout>
@@ -24,6 +26,7 @@ const ButtonLayout = styled.button`
   border: 1px solid ${({ $bgColor }) => ($bgColor ? $bgColor : "inherit")};
   border-radius: 0.5rem;
   background: ${({ $bgColor }) => ($bgColor ? $bgColor : "#3f3e3e")};
+  padding: ${({ $padding }) => $padding && $padding};
 
   font-size: ${({ $fontsize }) => ($fontsize ? $fontsize : "14px")};
   font-weight: ${({ theme }) => theme.weight.lg};

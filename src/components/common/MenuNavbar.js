@@ -6,6 +6,7 @@ import Overlay from "./Overlay";
 const MenuNavbar = (props) => {
   const navi = useNavigate();
 
+  const test = "test입니다.";
   const navItems = [
     {
       text: "내역",
