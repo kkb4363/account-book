@@ -78,6 +78,7 @@ export default function HistoryStatistics(props) {
       <span>지출 : {"-" + costFormatter(expenses)}원</span>
       <span>합계 : {totalCost()}원</span>
 
+      <div />
       <StyledButton
         onClick={handleTotalFlow}
         height={"24px"}
@@ -94,6 +95,7 @@ export default function HistoryStatistics(props) {
 const HistoryStatisticsRow = styled.div`
   width: 100%;
   height: 40%;
+  padding-top: 10px;
   display: flex;
   align-items: center;
   justify-content: space-around;
@@ -105,6 +107,9 @@ const HistoryStatisticsRow = styled.div`
     grid-template-columns: repeat(2, 1fr);
     place-items: center;
     gap: 10px;
+
+    & > button {
+    }
   }
 
   font-size: ${({ theme }) => theme.fontsize.sm};

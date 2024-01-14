@@ -43,7 +43,7 @@ export default function HistoryHeader(props) {
 const HeaderWrapper = styled.div`
   background: #3f3e3e;
   width: 100%;
-  height: 15%;
+  height: 25%;
 `;
 
 const CurrentYear = styled.div`
