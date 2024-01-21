@@ -1,4 +1,7 @@
 # account-book
+  개인 사용을 위한 가게부 웹,앱입니다.
+  링크 : kkb4363.github.io
+  
   ## pwa, 가게부
   -  CRA
 
